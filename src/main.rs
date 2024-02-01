@@ -1,9 +1,11 @@
 fn main() {
     let mut select = sql_builder::Select::new();
 
-    select.from("users_tb");
-    select.columns(["name", "age", "email"].to_vec());
-    select.limit(5);
+    select
+        .from("users_tb")
+        .distinct()
+        .columns(vec!["name", "age", "email"])
+        .limit(5);
 
     println!("{}", select.build());
 }
@@ -27,16 +29,19 @@ pub mod sql_builder {
             }
         }
 
-        pub fn distinct(&mut self) {
+        pub fn distinct(&mut self) -> &mut Select {
             self.distinct = true;
+            self
         }
 
-        pub fn from(&mut self, from: &str) {
+        pub fn from(&mut self, from: &str) -> &mut Select {
             self.from = from.to_string();
+            self
         }
 
-        pub fn columns(&mut self, columns: Vec<&str>) {
+        pub fn columns(&mut self, columns: Vec<&str>) -> &mut Select {
             self.columns = columns.iter().map(|s| s.to_string()).collect();
+            self
         }
 
         pub fn limit(&mut self, limit: u32) {
