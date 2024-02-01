@@ -5,9 +5,7 @@ fn main() {
 
     select
         .from("users_tb")
-        .distinct()
-        .columns(vec!["name", "age", "email"])
-        .limit(5);
+        .columns(vec!["name", "age", "email"]);
 
     println!("{}", select.build());
 }
@@ -76,9 +74,10 @@ pub mod sql_builder {
                 }
 
                 if self.limit > 0 {
-                    statement.push_str(&format!("LIMIT {};", self.limit));
+                    statement.push_str(&format!("LIMIT {}", self.limit));
                 }
 
+                statement = statement.trim().to_string() + ";";
                 statement
             }
         }
