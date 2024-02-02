@@ -14,22 +14,28 @@ impl Where {
     }
 
     pub fn equal_to(&mut self, field: &str, value: &str) -> &mut Where {
+        self.add_combined();
         self.statement.push_str(&format!(" {} = {} ", field, value));
-        // self.add_combined();
         self
     }
 
     pub fn build(&self) -> String {
         if self.statement.len() > 0 {
-            return "WHERE ".to_string() + &self.statement;
+            return "WHERE".to_string() + &self.statement;
         }
         "".to_string()
     }
 
-    // fn add_combined(&mut self) {
-    //     let mut combined = "";
-    //     self.statement.push_str(&format!(" {} ",))
-    // }
+    fn add_combined(&mut self) {
+        let combined = match self.combined_by {
+            Operator::AND => "AND",
+            Operator::OR => "OR",
+        };
+
+        if self.statement.len() > 0 {
+            self.statement.push_str(&format!("{}", combined))
+        }
+    }
 }
 
 #[allow(dead_code)]
