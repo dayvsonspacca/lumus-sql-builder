@@ -71,6 +71,17 @@ impl Where {
         self
     }
 
+    pub fn less_than_equal(&mut self, field: &str, value: &str) -> &mut Where {
+        self.add_combined();
+        if value.parse::<f64>().is_ok() {
+            self.statement.push_str(&format!(" {} <= {} ", field, value));
+        } else {
+            self.statement
+                .push_str(&format!(" {} <= '{}' ", field, value));
+        }
+        self
+    }
+
     pub fn build(&self) -> String {
         if self.statement.len() > 0 {
             return "WHERE".to_string() + &self.statement;
