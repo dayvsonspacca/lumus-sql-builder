@@ -4,6 +4,7 @@ pub struct Select {
     limit: u32,
     columns: Vec<String>,
     group: Vec<String>,
+    order: Vec<String>,
 }
 
 #[allow(dead_code)]
@@ -15,6 +16,7 @@ impl Select {
             limit: 0,
             columns: Vec::new(),
             group: Vec::new(),
+            order: Vec::new(),
         }
     }
 
@@ -35,6 +37,11 @@ impl Select {
 
     pub fn group(&mut self, group: Vec<&str>) -> &mut Select {
         self.group = group.iter().map(|s| s.to_string()).collect();
+        self
+    }
+
+    pub fn order(&mut self, order: Vec<&str>) -> &mut Select {
+        self.order = order.iter().map(|s| s.to_string()).collect();
         self
     }
 
@@ -69,6 +76,17 @@ impl Select {
             statement.push_str("GROUP BY ");
             for (index, col) in self.group.iter().enumerate() {
                 if index == self.group.len() - 1 {
+                    statement.push_str(&format!("{} ", &col));
+                    continue;
+                }
+                statement.push_str(&format!("{}, ", &col));
+            }
+        }
+
+        if self.order.len() > 0 {
+            statement.push_str("ORDER BY ");
+            for (index, col) in self.order.iter().enumerate() {
+                if index == self.order.len() - 1 {
                     statement.push_str(&format!("{} ", &col));
                     continue;
                 }
