@@ -14,27 +14,27 @@ impl Where {
     }
 
     pub fn equal_to(&mut self, field: &str, value: &str) -> &mut Where {
-        self.add_predicate("=", field, value)
+        self.add_predicate_comparative("=", field, value)
     }
 
     pub fn not_equal_to(&mut self, field: &str, value: &str) -> &mut Where {
-        self.add_predicate("!=", field, value)
+        self.add_predicate_comparative("!=", field, value)
     }
 
     pub fn greater_than(&mut self, field: &str, value: &str) -> &mut Where {
-        self.add_predicate(">", field, value)
+        self.add_predicate_comparative(">", field, value)
     }
 
     pub fn greater_than_equal(&mut self, field: &str, value: &str) -> &mut Where {
-        self.add_predicate(">=", field, value)
+        self.add_predicate_comparative(">=", field, value)
     }
 
     pub fn less_than(&mut self, field: &str, value: &str) -> &mut Where {
-        self.add_predicate("<", field, value)
+        self.add_predicate_comparative("<", field, value)
     }
 
     pub fn less_than_equal(&mut self, field: &str, value: &str) -> &mut Where {
-        self.add_predicate("<=", field, value)
+        self.add_predicate_comparative("<=", field, value)
     }
 
     pub fn build(&self) -> String {
@@ -55,7 +55,7 @@ impl Where {
         }
     }
 
-    fn add_predicate(&mut self, operator: &str, field: &str, value: &str) -> &mut Where {
+    fn add_predicate_comparative(&mut self, operator: &str, field: &str, value: &str) -> &mut Where {
         self.add_combiner();
         if value.parse::<f64>().is_ok() {
             self.statement
