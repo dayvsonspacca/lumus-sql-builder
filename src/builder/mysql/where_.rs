@@ -18,10 +18,18 @@ impl Where {
         self.statement.push_str(&format!(" {} = {} ", field, value));
         self
     }
-    
+
     pub fn not_equal_to(&mut self, field: &str, value: &str) -> &mut Where {
         self.add_combined();
-        self.statement.push_str(&format!(" {} != {} ", field, value));
+        self.statement
+            .push_str(&format!(" {} != {} ", field, value));
+        self
+    }
+
+    pub fn greater_than(&mut self, field: &str, value: &str) -> &mut Where {
+        self.add_combined();
+        self.statement
+            .push_str(&format!(" {} > {} ", field, value));
         self
     }
 
