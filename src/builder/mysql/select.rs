@@ -65,8 +65,8 @@ impl Select {
             statement.push_str(&format!("FROM {} ", self.from));
         }
 
-        statement.push_str("GROUP BY ");
         if self.group.len() > 0 {
+            statement.push_str("GROUP BY ");
             for (index, col) in self.group.iter().enumerate() {
                 if index == self.group.len() - 1 {
                     statement.push_str(&format!("{} ", &col));
@@ -74,8 +74,6 @@ impl Select {
                 }
                 statement.push_str(&format!("{}, ", &col));
             }
-        } else {
-            statement.push_str("* ");
         }
 
         if self.limit > 0 {
