@@ -15,21 +15,37 @@ impl Where {
 
     pub fn equal_to(&mut self, field: &str, value: &str) -> &mut Where {
         self.add_combined();
-        self.statement.push_str(&format!(" {} = {} ", field, value));
+
+        if value.parse::<f64>().is_ok() {
+            self.statement.push_str(&format!(" {} = {} ", field, value));
+        } else {
+            self.statement
+                .push_str(&format!(" {} = '{}' ", field, value));
+        }
+
         self
     }
 
     pub fn not_equal_to(&mut self, field: &str, value: &str) -> &mut Where {
         self.add_combined();
-        self.statement
-            .push_str(&format!(" {} != {} ", field, value));
+        if value.parse::<f64>().is_ok() {
+            self.statement
+                .push_str(&format!(" {} != {} ", field, value));
+        } else {
+            self.statement
+                .push_str(&format!(" {} != '{}' ", field, value));
+        }
         self
     }
 
     pub fn greater_than(&mut self, field: &str, value: &str) -> &mut Where {
         self.add_combined();
-        self.statement
-            .push_str(&format!(" {} > {} ", field, value));
+        if value.parse::<f64>().is_ok() {
+            self.statement.push_str(&format!(" {} > {} ", field, value));
+        } else {
+            self.statement
+                .push_str(&format!(" {} > '{}' ", field, value));
+        }
         self
     }
 
