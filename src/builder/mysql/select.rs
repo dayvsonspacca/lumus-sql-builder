@@ -1,8 +1,11 @@
+use super::where_::{Operator, Where};
+
 pub struct Select {
     distinct: bool,
     from: String,
     limit: u32,
     columns: String,
+    where_: Where,
     group: String,
     order: String,
 }
@@ -15,6 +18,7 @@ impl Select {
             from: String::new(),
             limit: 0,
             columns: String::new(),
+            where_: Where::new(Operator::AND),
             group: String::new(),
             order: String::new(),
         }
@@ -32,6 +36,11 @@ impl Select {
 
     pub fn columns(&mut self, columns: &str) -> &mut Select {
         self.columns = columns.to_string();
+        self
+    }
+
+    pub fn where_(&mut self, where_: Where) -> &mut Select {
+        self.where_ = where_;
         self
     }
 
@@ -61,6 +70,8 @@ impl Select {
         } else {
             statement.push_str("* ");
         }
+
+        statement.push_str(&self.where_.build());
 
         if self.from.len() > 0 {
             statement.push_str(&format!("FROM {} ", self.from));
