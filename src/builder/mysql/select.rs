@@ -3,6 +3,7 @@ pub struct Select {
     from: String,
     limit: u32,
     columns: Vec<String>,
+    group: Vec<String>,
 }
 
 #[allow(dead_code)]
@@ -13,6 +14,7 @@ impl Select {
             from: String::new(),
             limit: 0,
             columns: Vec::new(),
+            group: Vec::new(),
         }
     }
 
@@ -28,6 +30,11 @@ impl Select {
 
     pub fn columns(&mut self, columns: Vec<&str>) -> &mut Select {
         self.columns = columns.iter().map(|s| s.to_string()).collect();
+        self
+    }
+
+    pub fn group(&mut self, group: Vec<&str>) -> &mut Select {
+        self.group = group.iter().map(|s| s.to_string()).collect();
         self
     }
 
@@ -56,6 +63,19 @@ impl Select {
 
         if self.from.len() > 0 {
             statement.push_str(&format!("FROM {} ", self.from));
+        }
+
+        statement.push_str("GROUP BY ");
+        if self.group.len() > 0 {
+            for (index, col) in self.group.iter().enumerate() {
+                if index == self.group.len() - 1 {
+                    statement.push_str(&format!("{} ", &col));
+                    continue;
+                }
+                statement.push_str(&format!("{}, ", &col));
+            }
+        } else {
+            statement.push_str("* ");
         }
 
         if self.limit > 0 {

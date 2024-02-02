@@ -7,7 +7,8 @@ fn main() {
 
     select
         .from("users_tb")
-        .columns(vec!["name", "age", "email"]);
+        .columns(vec!["name", "age", "email"])
+        .group(vec!["name DESC", "age ASC"]);
 
     println!("{}", select.build());
 }
