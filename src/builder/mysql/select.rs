@@ -71,11 +71,11 @@ impl Select {
             statement.push_str("* ");
         }
 
-        statement.push_str(&self.where_.build());
-
         if self.from.len() > 0 {
             statement.push_str(&format!("FROM {} ", self.from));
         }
+
+        statement.push_str(&self.where_.build());
 
         if self.group.len() > 0 {
             statement.push_str("GROUP BY ");
