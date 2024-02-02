@@ -37,6 +37,11 @@ impl Where {
         self.add_comparative_predicate("<=", field, value)
     }
 
+    pub fn is_null(&mut self, field: &str) -> &mut Where {
+        self.add_self_comparative_predicate("ISNULL", field);
+        self
+    }
+
     pub fn build(&self) -> String {
         if self.statement.len() > 0 {
             return "WHERE".to_string() + &self.statement;
@@ -55,7 +60,12 @@ impl Where {
         }
     }
 
-    fn add_comparative_predicate(&mut self, operator: &str, field: &str, value: &str) -> &mut Where {
+    fn add_comparative_predicate(
+        &mut self,
+        operator: &str,
+        field: &str,
+        value: &str,
+    ) -> &mut Where {
         self.add_combiner();
         if value.parse::<f64>().is_ok() {
             self.statement
@@ -64,6 +74,13 @@ impl Where {
             self.statement
                 .push_str(&format!(" {} {} '{}' ", field, operator, value));
         }
+        self
+    }
+
+    fn add_self_comparative_predicate(&mut self, operator: &str, field: &str) -> &mut Where {
+        self.add_combiner();
+        self.statement
+            .push_str(&format!(" {} {} ", field, operator));
         self
     }
 }

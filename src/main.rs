@@ -11,7 +11,8 @@ fn main() {
           .greater_than("age", "2")
           .greater_than_equal("age", "2")
           .less_than("salary", "230.00")
-          .less_than_equal("age", "25");
+          .less_than_equal("age", "25")
+          .is_null("genre");
 
     select
         .columns("name, age, email, salary")
