@@ -1,4 +1,4 @@
-use super::where_::{Operator, Where};
+use super::where_::{Combiner, Where};
 
 pub struct Select {
     distinct: bool,
@@ -18,7 +18,7 @@ impl Select {
             from: String::new(),
             limit: 0,
             columns: String::new(),
-            where_: Where::new(Operator::AND),
+            where_: Where::new(Combiner::AND),
             group: String::new(),
             order: String::new(),
         }

@@ -1,12 +1,12 @@
 #[allow(dead_code)]
 pub struct Where {
     statement: String,
-    combined_by: Operator,
+    combined_by: Combiner,
 }
 
 #[allow(dead_code)]
 impl Where {
-    pub fn new(combined_by: Operator) -> Where {
+    pub fn new(combined_by: Combiner) -> Where {
         Where {
             statement: String::new(),
             combined_by,
@@ -28,8 +28,8 @@ impl Where {
 
     fn add_combined(&mut self) {
         let combined = match self.combined_by {
-            Operator::AND => "AND",
-            Operator::OR => "OR",
+            Combiner::AND => "AND",
+            Combiner::OR => "OR",
         };
 
         if self.statement.len() > 0 {
@@ -39,7 +39,7 @@ impl Where {
 }
 
 #[allow(dead_code)]
-pub enum Operator {
+pub enum Combiner {
     AND,
     OR,
 }
