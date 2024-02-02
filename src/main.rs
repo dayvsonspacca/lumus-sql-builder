@@ -12,7 +12,10 @@ fn main() {
           .greater_than_equal("age", "2")
           .less_than("salary", "230.00")
           .less_than_equal("age", "25")
-          .is_null("genre");
+          .is_null("genre")
+          .is_not_null("name")
+          .in_("name", vec!["dayvson", "iago", "oaao", "ivalber"])
+          .not_in("age", vec!["20", "23", "19"]);
 
     select
         .columns("name, age, email, salary")

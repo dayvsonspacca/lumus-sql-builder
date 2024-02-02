@@ -47,6 +47,16 @@ impl Where {
         self
     }
 
+    pub fn in_(&mut self, field: &str, fields: Vec<&str>) -> &mut Where {
+        self.add_multiple_values_comparative_predicate("IN", field, fields);
+        self
+    }
+
+    pub fn not_in(&mut self, field: &str, fields: Vec<&str>) -> &mut Where {
+        self.add_multiple_values_comparative_predicate("NOT IN", field, fields);
+        self
+    }
+
     pub fn build(&self) -> String {
         if self.statement.len() > 0 {
             return "WHERE".to_string() + &self.statement;
@@ -86,6 +96,20 @@ impl Where {
         self.add_combiner();
         self.statement
             .push_str(&format!(" {} {} ", field, operator));
+        self
+    }
+
+    fn add_multiple_values_comparative_predicate(
+        &mut self,
+        operator: &str,
+        field: &str,
+        fields: Vec<&str>,
+    ) -> &mut Where {
+        self.add_combiner();
+        
+        let values = "'".to_owned() + &fields.join("', '") + "'";
+
+        self.statement.push_str(&format!(" {} {} ({}) ", field, operator, values));
         self
     }
 }
