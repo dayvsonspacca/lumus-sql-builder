@@ -2,9 +2,9 @@ pub struct Select {
     distinct: bool,
     from: String,
     limit: u32,
-    columns: Vec<String>,
-    group: Vec<String>,
-    order: Vec<String>,
+    columns: String,
+    group: String,
+    order: String,
 }
 
 #[allow(dead_code)]
@@ -14,9 +14,9 @@ impl Select {
             distinct: false,
             from: String::new(),
             limit: 0,
-            columns: Vec::new(),
-            group: Vec::new(),
-            order: Vec::new(),
+            columns: String::new(),
+            group: String::new(),
+            order: String::new(),
         }
     }
 
@@ -30,18 +30,18 @@ impl Select {
         self
     }
 
-    pub fn columns(&mut self, columns: Vec<&str>) -> &mut Select {
-        self.columns = columns.iter().map(|s| s.to_string()).collect();
+    pub fn columns(&mut self, columns: &str) -> &mut Select {
+        self.columns = columns.to_string();
         self
     }
 
-    pub fn group(&mut self, group: Vec<&str>) -> &mut Select {
-        self.group = group.iter().map(|s| s.to_string()).collect();
+    pub fn group(&mut self, group: &str) -> &mut Select {
+        self.group = group.to_string();
         self
     }
 
-    pub fn order(&mut self, order: Vec<&str>) -> &mut Select {
-        self.order = order.iter().map(|s| s.to_string()).collect();
+    pub fn order(&mut self, order: &str) -> &mut Select {
+        self.order = order.to_string();
         self
     }
 
@@ -57,13 +57,7 @@ impl Select {
         }
 
         if self.columns.len() > 0 {
-            for (index, col) in self.columns.iter().enumerate() {
-                if index == self.columns.len() - 1 {
-                    statement.push_str(&format!("{} ", &col));
-                    continue;
-                }
-                statement.push_str(&format!("{}, ", &col));
-            }
+            statement.push_str(&format!("{} ", self.columns.trim_end()));
         } else {
             statement.push_str("* ");
         }
@@ -74,24 +68,12 @@ impl Select {
 
         if self.group.len() > 0 {
             statement.push_str("GROUP BY ");
-            for (index, col) in self.group.iter().enumerate() {
-                if index == self.group.len() - 1 {
-                    statement.push_str(&format!("{} ", &col));
-                    continue;
-                }
-                statement.push_str(&format!("{}, ", &col));
-            }
+            statement.push_str(&format!("{} ", self.group.trim_end()));
         }
 
         if self.order.len() > 0 {
             statement.push_str("ORDER BY ");
-            for (index, col) in self.order.iter().enumerate() {
-                if index == self.order.len() - 1 {
-                    statement.push_str(&format!("{} ", &col));
-                    continue;
-                }
-                statement.push_str(&format!("{}, ", &col));
-            }
+            statement.push_str(&format!("{} ", self.order.trim_end()));
         }
 
         if self.limit > 0 {

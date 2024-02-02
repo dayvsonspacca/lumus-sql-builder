@@ -7,9 +7,9 @@ fn main() {
 
     select
         .from("users_tb")
-        .columns(vec!["name", "age", "email"])
-        .group(vec!["name"])
-        .order(vec!["name DESC", "age ASC"]);
+        .columns("name, age, email")
+        .group("name")
+        .order("name DESC, age ASC");
 
     println!("{}", select.build());
 }
