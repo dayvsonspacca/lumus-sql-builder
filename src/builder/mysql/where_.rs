@@ -14,72 +14,27 @@ impl Where {
     }
 
     pub fn equal_to(&mut self, field: &str, value: &str) -> &mut Where {
-        self.add_combined();
-
-        if value.parse::<f64>().is_ok() {
-            self.statement.push_str(&format!(" {} = {} ", field, value));
-        } else {
-            self.statement
-                .push_str(&format!(" {} = '{}' ", field, value));
-        }
-
-        self
+        self.add_predicate("=", field, value)
     }
 
     pub fn not_equal_to(&mut self, field: &str, value: &str) -> &mut Where {
-        self.add_combined();
-        if value.parse::<f64>().is_ok() {
-            self.statement
-                .push_str(&format!(" {} != {} ", field, value));
-        } else {
-            self.statement
-                .push_str(&format!(" {} != '{}' ", field, value));
-        }
-        self
+        self.add_predicate("!=", field, value)
     }
 
     pub fn greater_than(&mut self, field: &str, value: &str) -> &mut Where {
-        self.add_combined();
-        if value.parse::<f64>().is_ok() {
-            self.statement.push_str(&format!(" {} > {} ", field, value));
-        } else {
-            self.statement
-                .push_str(&format!(" {} > '{}' ", field, value));
-        }
-        self
+        self.add_predicate(">", field, value)
     }
 
     pub fn greater_than_equal(&mut self, field: &str, value: &str) -> &mut Where {
-        self.add_combined();
-        if value.parse::<f64>().is_ok() {
-            self.statement.push_str(&format!(" {} >= {} ", field, value));
-        } else {
-            self.statement
-                .push_str(&format!(" {} >= '{}' ", field, value));
-        }
-        self
+        self.add_predicate(">=", field, value)
     }
 
     pub fn less_than(&mut self, field: &str, value: &str) -> &mut Where {
-        self.add_combined();
-        if value.parse::<f64>().is_ok() {
-            self.statement.push_str(&format!(" {} < {} ", field, value));
-        } else {
-            self.statement
-                .push_str(&format!(" {} < '{}' ", field, value));
-        }
-        self
+        self.add_predicate("<", field, value)
     }
 
     pub fn less_than_equal(&mut self, field: &str, value: &str) -> &mut Where {
-        self.add_combined();
-        if value.parse::<f64>().is_ok() {
-            self.statement.push_str(&format!(" {} <= {} ", field, value));
-        } else {
-            self.statement
-                .push_str(&format!(" {} <= '{}' ", field, value));
-        }
-        self
+        self.add_predicate("<=", field, value)
     }
 
     pub fn build(&self) -> String {
@@ -89,7 +44,7 @@ impl Where {
         "".to_string()
     }
 
-    fn add_combined(&mut self) {
+    fn add_combiner(&mut self) {
         let combined = match self.combined_by {
             Combiner::AND => "AND",
             Combiner::OR => "OR",
@@ -98,6 +53,18 @@ impl Where {
         if self.statement.len() > 0 {
             self.statement.push_str(&format!("{}", combined))
         }
+    }
+
+    fn add_predicate(&mut self, operator: &str, field: &str, value: &str) -> &mut Where {
+        self.add_combiner();
+        if value.parse::<f64>().is_ok() {
+            self.statement
+                .push_str(&format!(" {} {} {} ", field, operator, value));
+        } else {
+            self.statement
+                .push_str(&format!(" {} {} '{}' ", field, operator, value));
+        }
+        self
     }
 }
 
