@@ -42,6 +42,11 @@ impl Where {
         self
     }
 
+    pub fn is_not_null(&mut self, field: &str) -> &mut Where {
+        self.add_self_comparative_predicate("IS NOT NULL", field);
+        self
+    }
+
     pub fn build(&self) -> String {
         if self.statement.len() > 0 {
             return "WHERE".to_string() + &self.statement;
