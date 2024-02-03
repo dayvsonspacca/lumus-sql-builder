@@ -4,6 +4,7 @@ pub struct Select {
     distinct: bool,
     from: String,
     limit: u32,
+    offset: u32,
     columns: String,
     where_: Where,
     group: String,
@@ -17,6 +18,7 @@ impl Select {
             distinct: false,
             from: String::new(),
             limit: 0,
+            offset: 0,
             columns: String::new(),
             where_: Where::new(Combiner::AND),
             group: String::new(),
@@ -58,6 +60,10 @@ impl Select {
         self.limit = limit;
     }
 
+    pub fn offset(&mut self, limit: u32) {
+        self.offset = limit;
+    }
+
     pub fn build(&self) -> String {
         let mut statement = "SELECT ".to_string();
 
@@ -89,6 +95,10 @@ impl Select {
 
         if self.limit > 0 {
             statement.push_str(&format!("LIMIT {}", self.limit));
+        }
+
+        if self.limit > 0 {
+            statement.push_str(&format!("OFFSET {}", self.limit));
         }
 
         statement = statement.trim().to_string() + ";";
