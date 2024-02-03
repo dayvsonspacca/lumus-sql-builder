@@ -60,8 +60,8 @@ impl Select {
         self.limit = limit;
     }
 
-    pub fn offset(&mut self, limit: u32) {
-        self.offset = limit;
+    pub fn offset(&mut self, offset: u32) {
+        self.offset = offset;
     }
 
     pub fn build(&self) -> String {
@@ -97,8 +97,8 @@ impl Select {
             statement.push_str(&format!("LIMIT {}", self.limit));
         }
 
-        if self.limit > 0 {
-            statement.push_str(&format!("OFFSET {}", self.limit));
+        if self.offset > 0 && self.limit > 0 {
+            statement.push_str(&format!("OFFSET {}", self.offset));
         }
 
         statement = statement.trim().to_string() + ";";
