@@ -106,10 +106,11 @@ impl Where {
         fields: Vec<&str>,
     ) -> &mut Where {
         self.add_combiner();
-        
+
         let values = "'".to_owned() + &fields.join("', '") + "'";
 
-        self.statement.push_str(&format!(" {} {} ({}) ", field, operator, values));
+        self.statement
+            .push_str(&format!(" {} {} ({}) ", field, operator, values));
         self
     }
 }
