@@ -4,7 +4,7 @@ use builder::mysql::select::Select;
 use builder::mysql::where_::{Combiner, Where};
 fn main() {
     let mut select = Select::new();
-    let mut where_ = Where::new(Combiner::AND);
+    let mut where_ = Where::new(Combiner::And);
 
     where_
         .equal_to("name", "2")

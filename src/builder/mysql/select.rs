@@ -20,7 +20,7 @@ impl Select {
             limit: 0,
             offset: 0,
             columns: String::new(),
-            where_: Where::new(Combiner::AND),
+            where_: Where::new(Combiner::And),
             group: String::new(),
             order: String::new(),
         }

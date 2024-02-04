@@ -66,8 +66,8 @@ impl Where {
 
     fn add_combiner(&mut self) {
         let combined = match self.combined_by {
-            Combiner::AND => "AND",
-            Combiner::OR => "OR",
+            Combiner::And => "AND",
+            Combiner::Or => "OR",
         };
 
         if self.statement.len() > 0 {
@@ -117,6 +117,6 @@ impl Where {
 
 #[allow(dead_code)]
 pub enum Combiner {
-    AND,
-    OR,
+    And,
+    Or,
 }
