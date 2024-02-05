@@ -1,7 +1,9 @@
 mod builder;
 
+use crate::builder::mysql::join::JoinType;
 use builder::mysql::select::Select;
 use builder::mysql::where_::{Combiner, Where};
+
 fn main() {
     let mut select = Select::new();
     let mut where_ = Where::new(Combiner::And);
@@ -20,7 +22,9 @@ fn main() {
 
     select
         .columns("name, age, email, salary")
-        .from("users_tb")
+        .from("users_tb u")
+        .join("emails_tb e", "e.user_id = u.user_id", "", JoinType::Left)
+        .join("phones_tb p", "p.user_id = u.user_id", "", JoinType::Left)
         .where_(where_)
         .group("name")
         .order("name DESC, age ASC")

@@ -1,4 +1,7 @@
-use super::where_::{Combiner, Where};
+use super::{
+    join::{Join, JoinType},
+    where_::{Combiner, Where},
+};
 
 pub struct Select {
     distinct: bool,
@@ -9,6 +12,8 @@ pub struct Select {
     where_: Where,
     group: String,
     order: String,
+
+    joins: Vec<Join>,
 }
 
 #[allow(dead_code)]
@@ -23,6 +28,7 @@ impl Select {
             where_: Where::new(Combiner::And),
             group: String::new(),
             order: String::new(),
+            joins: vec![],
         }
     }
 
@@ -43,6 +49,22 @@ impl Select {
 
     pub fn where_(&mut self, where_: Where) -> &mut Select {
         self.where_ = where_;
+        self
+    }
+
+    pub fn join(
+        &mut self,
+        table: &str,
+        on: &str,
+        columns: &str,
+        join_type: JoinType,
+    ) -> &mut Select {
+        self.joins.push(Join::new(
+            table.to_string(),
+            on.to_string(),
+            columns.to_string(),
+            join_type,
+        ));
         self
     }
 
@@ -79,6 +101,12 @@ impl Select {
 
         if self.from.len() > 0 {
             statement.push_str(&format!("FROM {} ", self.from));
+        }
+
+        if self.joins.len() > 0 {
+            for join in &self.joins {
+                statement.push_str(&join.build());
+            }
         }
 
         statement.push_str(&self.where_.build());
