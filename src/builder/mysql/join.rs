@@ -2,18 +2,16 @@
 pub struct Join {
     table: String,
     join_type: JoinType,
-    columns: String,
     on: String,
 }
 
 #[allow(dead_code)]
 
 impl Join {
-    pub fn new(table: String, on: String, columns: String, join_type: JoinType) -> Join {
+    pub fn new(table: String, on: String, join_type: JoinType) -> Join {
         Join {
             table,
             on,
-            columns,
             join_type,
         }
     }

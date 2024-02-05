@@ -56,13 +56,11 @@ impl Select {
         &mut self,
         table: &str,
         on: &str,
-        columns: &str,
         join_type: JoinType,
     ) -> &mut Select {
         self.joins.push(Join::new(
             table.to_string(),
             on.to_string(),
-            columns.to_string(),
             join_type,
         ));
         self
