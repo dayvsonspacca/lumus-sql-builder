@@ -11,7 +11,7 @@ Aqui está um exemplo de como o código pode ser usado para construir uma consul
 ```rust
 mod builder;
 
-use crate::builder::mysql::join::JoinType;
+use builder::mysql::join::JoinType;
 use builder::mysql::select::Select;
 use builder::mysql::where_::{Combiner, Where};
 
@@ -20,29 +20,21 @@ fn main() {
     let mut where_ = Where::new(Combiner::And);
 
     where_
-        .equal_to("name", "2")
         .not_equal_to("email", "spacca.dayvson@gmail.com")
-        .greater_than("age", "2")
         .greater_than_equal("age", "2")
         .less_than("salary", "230.00")
         .less_than_equal("age", "25")
-        .is_null("genre")
-        .is_not_null("name")
-        .in_("name", vec!["dayvson", "iago", "oaao", "ivalber"])
-        .not_in("age", vec!["20", "23", "19"]);
+        .is_null("genre");
 
     select
         .columns("name, age, email, salary")
         .from("users_tb u")
         .join("emails_tb e", "e.user_id = u.user_id", "", JoinType::Left)
         .join("phones_tb p", "p.user_id = u.user_id", "", JoinType::Left)
-        .where_(where_)
-        .group("name")
-        .order("name DESC, age ASC")
-        .offset(4);
+        .where_(where_);
 
     println!("{}", select.build());
 }
 
-Output: SELECT name, age, email, salary FROM users_tb u LEFT JOIN emails_tb e ON e.user_id = u.user_id LEFT JOIN phones_tb p ON p.user_id = u.user_id WHERE email != 'spacca.dayvson@gmail.com' AND age >= 2 AND salary < 230.00 AND age <= 25 AND genre ISNULL GROUP BY name ORDER BY name DESC, age ASC;
+Output: SELECT name, age, email, salary FROM users_tb u LEFT JOIN emails_tb e ON e.user_id = u.user_id LEFT JOIN phones_tb p ON p.user_id = u.user_id WHERE email != 'spacca.dayvson@gmail.com' AND age >= 2 AND salary < 230.00 AND age <= 25 AND genre ISNULL;
 ```
