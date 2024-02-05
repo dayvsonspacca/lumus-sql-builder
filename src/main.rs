@@ -1,6 +1,6 @@
 mod builder;
 
-use crate::builder::mysql::join::JoinType;
+use builder::mysql::join::JoinType;
 use builder::mysql::select::Select;
 use builder::mysql::where_::{Combiner, Where};
 
