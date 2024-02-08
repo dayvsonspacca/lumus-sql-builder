@@ -3,51 +3,51 @@ use super::{
     where_::{Combiner, Where},
 };
 
-pub struct Select {
+pub struct Select<'a> {
     distinct: bool,
-    from: String,
+    from: &'a str,
     limit: u32,
     offset: u32,
-    columns: String,
+    columns: &'a str,
     where_: Where,
-    group: String,
-    order: String,
+    group: &'a str,
+    order: &'a str,
 
     joins: Vec<Join>,
 }
 
 #[allow(dead_code)]
-impl Select {
-    pub fn new() -> Select {
+impl<'a> Select<'a> {
+    pub fn new() -> Select<'a> {
         Select {
             distinct: false,
-            from: String::new(),
+            from: "",
             limit: 0,
             offset: 0,
-            columns: String::new(),
+            columns: "",
             where_: Where::new(Combiner::And),
-            group: String::new(),
-            order: String::new(),
+            group: "",
+            order: "",
             joins: vec![],
         }
     }
 
-    pub fn distinct(&mut self) -> &mut Select {
+    pub fn distinct(&mut self) -> &mut Select<'a> {
         self.distinct = true;
         self
     }
 
-    pub fn from(&mut self, from: &str) -> &mut Select {
-        self.from = from.to_string();
+    pub fn from(&mut self, from: &'a str) -> &mut Select<'a> {
+        self.from = from;
         self
     }
 
-    pub fn columns(&mut self, columns: &str) -> &mut Select {
-        self.columns = columns.to_string();
+    pub fn columns(&mut self, columns: &'a str) -> &mut Select<'a> {
+        self.columns = columns;
         self
     }
 
-    pub fn where_(&mut self, where_: Where) -> &mut Select {
+    pub fn where_(&mut self, where_: Where) -> &mut Select<'a> {
         self.where_ = where_;
         self
     }
@@ -57,7 +57,7 @@ impl Select {
         table: &str,
         on: &str,
         join_type: JoinType,
-    ) -> &mut Select {
+    ) -> &mut Select<'a> {
         self.joins.push(Join::new(
             table.to_string(),
             on.to_string(),
@@ -66,13 +66,13 @@ impl Select {
         self
     }
 
-    pub fn group(&mut self, group: &str) -> &mut Select {
-        self.group = group.to_string();
+    pub fn group(&mut self, group: &'a str) -> &mut Select<'a> {
+        self.group = group;
         self
     }
 
-    pub fn order(&mut self, order: &str) -> &mut Select {
-        self.order = order.to_string();
+    pub fn order(&mut self, order: &'a str) -> &mut Select<'a> {
+        self.order = order;
         self
     }
 
