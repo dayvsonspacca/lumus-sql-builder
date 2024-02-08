@@ -3,6 +3,7 @@ pub struct Insert {
     values: Vec<[String; 2]>,
 }
 
+#[allow(dead_code)]
 impl Insert {
     pub fn new(table: &str) -> Insert {
         Insert {
