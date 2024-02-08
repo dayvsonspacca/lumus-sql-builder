@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "sql-query-builder"
+name = "lua-db"
 version = "0.1.0"

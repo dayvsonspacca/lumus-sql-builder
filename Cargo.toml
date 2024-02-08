@@ -1,5 +1,5 @@
 [package]
-name = "sql-query-builder"
+name = "lua-db"
 version = "0.1.0"
 edition = "2021"
 
