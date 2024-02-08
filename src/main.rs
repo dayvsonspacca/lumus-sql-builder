@@ -6,8 +6,8 @@ fn main() {
     let mut insert = Insert::new("users_tb");
 
     insert.values(vec![
-        ["name".to_string(), "Dayvson Spacca".to_string()],
-        ["age".to_string(), "20".to_string()],
+        ["name", "Dayvson Spacca"],
+        ["age", "20"],
     ]);
 
     println!("{}", insert.build());

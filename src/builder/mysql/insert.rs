@@ -1,18 +1,18 @@
-pub struct Insert {
-    table: String,
-    values: Vec<[String; 2]>,
+pub struct Insert<'a> {
+    table: &'a str,
+    values: Vec<[&'a str; 2]>,
 }
 
 #[allow(dead_code)]
-impl Insert {
-    pub fn new(table: &str) -> Insert {
+impl<'a> Insert<'a> {
+    pub fn new(table: &'a str) -> Insert<'a> {
         Insert {
-            table: table.to_string(),
+            table,
             values: vec![],
         }
     }
 
-    pub fn values(&mut self, values: Vec<[String; 2]>) {
+    pub fn values(&mut self, values: Vec<[&'a str; 2]>) {
         self.values = values;
     }
 
@@ -35,7 +35,7 @@ impl Insert {
         }
         columns.pop();
         values.pop();
-        
+
         statement.push_str(&format!("({}) VALUES ({})", columns, values));
 
         statement
