@@ -1,14 +1,18 @@
+use crate::builder::mysql::{update::Update, where_::{self, Where}};
+
 mod builder;
 
-use builder::mysql::insert::Insert;
-
 fn main() {
-    let mut insert = Insert::new("users_tb");
+    let mut update = Update::new("users_tb");
+    let mut where_ = Where::new(where_::Combiner::And);
 
-    insert.values(vec![
-        ["name", "Dayvson Spacca"],
-        ["age", "20"],
+    where_.equal_to("user_id", "2");
+
+    update.set(vec![
+        ["nome", "Luiz Gonzaga"],
+        ["age", "2"]
     ]);
+    update.where_(where_);
 
-    println!("{}", insert.build());
+    println!("{}", update.build());
 }
