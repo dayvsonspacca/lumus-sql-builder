@@ -1,4 +1,4 @@
-# Lua-db -> Sql query Builder
+# Lua-db - Sql query Builder
 
 Este repositório contém um projeto escrito em Rust com o objetivo de construir consultas SQL. Foi criado como parte de um esforço para aprender mais sobre a linguagem de programação Rust e suas aplicações.
 
@@ -35,6 +35,8 @@ fn main() {
 
     println!("{}", select.build());
 }
-
-Output: SELECT name, age, email, salary FROM users_tb u LEFT JOIN emails_tb e ON e.user_id = u.user_id LEFT JOIN phones_tb p ON p.user_id = u.user_id WHERE email != 'spacca.dayvson@gmail.com' AND age >= 2 AND salary < 230.00 AND age <= 25 AND genre ISNULL;
+```
+# Output: 
+```sql
+SELECT name, age, email, salary FROM users_tb u LEFT JOIN emails_tb e ON e.user_id = u.user_id LEFT JOIN phones_tb p ON p.user_id = u.user_id WHERE email != 'spacca.dayvson@gmail.com' AND age >= 2 AND salary < 230.00 AND age <= 25 AND genre ISNULL;
 ```
