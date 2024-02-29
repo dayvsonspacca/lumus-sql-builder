@@ -1,4 +1,4 @@
-# Lua-db - Sql query Builder
+# Lua sql builder
 
 Este repositório contém um projeto escrito em Rust com o objetivo de construir consultas SQL. Foi criado como parte de um esforço para aprender mais sobre a linguagem de programação Rust e suas aplicações.
 
