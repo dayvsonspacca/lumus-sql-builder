@@ -1,12 +1,11 @@
 # Lua sql builder
+This repository contains a project written in Rust with the aim of building SQL queries. It was created as part of an effort to learn more about the Rust programming language and its applications.
 
-Este repositório contém um projeto escrito em Rust com o objetivo de construir consultas SQL. Foi criado como parte de um esforço para aprender mais sobre a linguagem de programação Rust e suas aplicações.
+## About project
 
-## Sobre o Projeto
+The project is an SQL query builder that allows you to create complex SQL queries programmatically and intuitively. It supports a variety of SQL operations, including column selection, joins, WHERE clauses, grouping, sorting, and much more.
 
-O projeto é um construtor de consultas SQL que permite criar consultas SQL complexas de maneira programática e intuitiva. Ele suporta uma variedade de operações SQL, incluindo seleção de colunas, junções, cláusulas WHERE, agrupamento, ordenação e muito mais.
-
-Aqui está um exemplo de como o código pode ser usado para construir uma consulta SQL:
+Here is an example of how the code can be used to build an SQL query:
 
 ```rust
 mod builder;
