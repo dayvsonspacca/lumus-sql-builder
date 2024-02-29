@@ -6,7 +6,6 @@ authors = ["Dayvson Spacca spacca.dayvson@gmail.com"]
 description = "Build sql statements from structs"
 readme = "README.md"
 repository = "https://github.com/dayvsonspacca/lua-sql-builder"
-license = "MIT"
 license-file = "LICENSE"
 keywords = ["sql"]
 
