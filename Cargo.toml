@@ -7,7 +7,7 @@ description = "Build sql statements from structs"
 readme = "README.md"
 repository = "https://github.com/dayvsonspacca/lua-sql-builder"
 license = "MIT"
-license-file = "LICENSE.txt"
+license-file = "LICENSE"
 keywords = ["sql"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
