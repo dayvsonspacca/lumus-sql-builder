@@ -12,6 +12,6 @@ keywords = ["sql"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
-name = "lua-sql-builder"
+name = "lua_sql_builder"
 
 [dependencies]
