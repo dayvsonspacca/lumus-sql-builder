@@ -1,6 +1,6 @@
 [package]
 name = "lua-sql-builder"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Dayvson Spacca spacca.dayvson@gmail.com"]
 description = "Build sql statements from structs"
@@ -10,5 +10,8 @@ license-file = "LICENSE"
 keywords = ["sql"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "lua-sql-builder"
 
 [dependencies]
