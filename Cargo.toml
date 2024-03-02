@@ -1,9 +1,9 @@
 [package]
 name = "lua-sql-builder"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2021"
 authors = ["Dayvson Spacca spacca.dayvson@gmail.com"]
-description = "Build sql statements from structs"
+description = "Build sql statements programmatically and intuitively"
 readme = "README.md"
 repository = "https://github.com/dayvsonspacca/lua-sql-builder"
 license = "MIT"
