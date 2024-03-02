@@ -57,6 +57,14 @@ impl Where {
         self
     }
 
+    pub fn like(&mut self, field: &str, value: &str) -> &mut Where {
+        self.add_comparative_predicate("LIKE", field, value)
+    }
+
+    pub fn not_like(&mut self, field: &str, value: &str) -> &mut Where {
+        self.add_comparative_predicate("NOT LIKE", field, value)
+    }
+
     pub fn build(&self) -> String {
         if self.statement.len() > 0 {
             return "WHERE".to_string() + &self.statement;
