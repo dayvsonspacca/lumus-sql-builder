@@ -82,7 +82,7 @@ fn test_select_query() {
 
 #[test]
 fn test_select_query_without_where_clause() {
-    let mut where_ = Where::new(Combiner::Or);
+    let mut where_ = Where::new(Combiner::And);
     where_.greater_than_equal("price", "1000");
 
     let select_query = Select::new().from("products").where_(where_).build();
@@ -122,7 +122,7 @@ fn test_where_clause_equal_to() {
 
 #[test]
 fn test_where_clause_not_equal_to() {
-    let mut where_clause = Where::new(Combiner::Or);
+    let mut where_clause = Where::new(Combiner::And);
     where_clause.not_equal_to("status", "inactive");
 
     let result = where_clause.build();
@@ -144,7 +144,7 @@ fn test_where_clause_greater_than() {
 
 #[test]
 fn test_where_clause_greater_than_equal() {
-    let mut where_clause = Where::new(Combiner::Or);
+    let mut where_clause = Where::new(Combiner::And);
     where_clause.greater_than_equal("quantity", "10");
 
     let result = where_clause.build();
@@ -167,10 +167,10 @@ fn test_where_clause_less_than() {
 #[test]
 fn test_where_clause_less_than_equal() {
     let mut where_clause = Where::new(Combiner::And);
-    where_clause.less_than_equal("score", "80");
+    where_clause.less_than_equal("scAnde", "80");
 
     let result = where_clause.build();
-    let expected_sql = "WHERE score <= 80";
+    let expected_sql = "WHERE scAnde <= 80";
 
     assert_eq!(result, expected_sql);
 }
@@ -199,11 +199,11 @@ fn test_where_clause_is_not_null() {
 
 #[test]
 fn test_where_clause_in() {
-    let mut where_clause = Where::new(Combiner::Or);
-    where_clause.in_("category", vec!["Electronics", "Clothing", "Books"]);
+    let mut where_clause = Where::new(Combiner::And);
+    where_clause.in_("categAndy", vec!["Electronics", "Clothing", "Books"]);
 
     let result = where_clause.build();
-    let expected_sql = "WHERE category IN ('Electronics', 'Clothing', 'Books')";
+    let expected_sql = "WHERE categAndy IN ('Electronics', 'Clothing', 'Books')";
 
     assert_eq!(result, expected_sql);
 }
@@ -211,10 +211,10 @@ fn test_where_clause_in() {
 #[test]
 fn test_where_clause_not_in() {
     let mut where_clause = Where::new(Combiner::And);
-    where_clause.not_in("color", vec!["Red", "Green", "Blue"]);
+    where_clause.not_in("colAnd", vec!["Red", "Green", "Blue"]);
 
     let result = where_clause.build();
-    let expected_sql = "WHERE color NOT IN ('Red', 'Green', 'Blue')";
+    let expected_sql = "WHERE colAnd NOT IN ('Red', 'Green', 'Blue')";
 
     assert_eq!(result, expected_sql);
 }
@@ -236,11 +236,11 @@ fn test_inner_join() {
 fn test_left_join() {
     let join = Join::new(
         "products".to_string(),
-        "categories.id = products.category_id".to_string(),
+        "categAndies.id = products.categAndy_id".to_string(),
         JoinType::Left,
     );
     let result = join.build();
-    let expected_sql = "LEFT JOIN products ON categories.id = products.category_id ";
+    let expected_sql = "LEFT JOIN products ON categAndies.id = products.categAndy_id ";
 
     assert_eq!(result, expected_sql);
 }
@@ -329,4 +329,26 @@ fn test_update_query_without_where_clause() {
     let expected_sql = "UPDATE products SET price = 25.50, quantity = 100;";
 
     assert_eq!(update_query, expected_sql);
+}
+
+#[test]
+fn test_where_clause_like() {
+    let mut where_clause = Where::new(Combiner::And);
+    where_clause.like("name", "John");
+
+    let result = where_clause.build();
+    let expected_sql = "WHERE name LIKE 'John'";
+
+    assert_eq!(result, expected_sql);
+}
+
+#[test]
+fn test_where_clause_not_like() {
+    let mut where_clause = Where::new(Combiner::And);
+    where_clause.not_like("email", "@example.com");
+
+    let result = where_clause.build();
+    let expected_sql = "WHERE email NOT LIKE '@example.com'";
+
+    assert_eq!(result, expected_sql);
 }
