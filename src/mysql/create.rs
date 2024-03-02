@@ -16,8 +16,12 @@ impl<'a> Create<'a> {
 
     pub fn build(&self) -> String {
         let mut statement = "CREATE TABLE IF NOT EXISTS ".to_string();
-        statement.push_str(&format!("{} ", self.table));
-        statement.push_str(&format!("({});", self.columns));
+        statement.push_str(&format!("{}", self.table));
+        if self.columns.len() > 0 {
+            statement.push_str(&format!(" ({})", self.columns));
+        }
+
+        statement = statement.trim().to_string() + ";";
         statement
     }
 }

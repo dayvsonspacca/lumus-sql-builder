@@ -71,7 +71,7 @@ impl Where {
         };
 
         if self.statement.len() > 0 {
-            self.statement.push_str(&format!("{}", combined))
+            self.statement.push_str(&format!(" {}", combined))
         }
     }
 
@@ -84,18 +84,17 @@ impl Where {
         self.add_combiner();
         if value.parse::<f64>().is_ok() {
             self.statement
-                .push_str(&format!(" {} {} {} ", field, operator, value));
+                .push_str(&format!(" {} {} {}", field, operator, value));
         } else {
             self.statement
-                .push_str(&format!(" {} {} '{}' ", field, operator, value));
+                .push_str(&format!(" {} {} '{}'", field, operator, value));
         }
         self
     }
 
     fn add_self_comparative_predicate(&mut self, operator: &str, field: &str) -> &mut Where {
         self.add_combiner();
-        self.statement
-            .push_str(&format!(" {} {} ", field, operator));
+        self.statement.push_str(&format!(" {} {}", field, operator));
         self
     }
 
@@ -110,7 +109,7 @@ impl Where {
         let values = "'".to_owned() + &fields.join("', '") + "'";
 
         self.statement
-            .push_str(&format!(" {} {} ({}) ", field, operator, values));
+            .push_str(&format!(" {} {} ({})", field, operator, values));
         self
     }
 }

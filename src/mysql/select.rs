@@ -68,12 +68,14 @@ impl<'a> Select<'a> {
         self
     }
 
-    pub fn limit(&mut self, limit: u32) {
+    pub fn limit(&mut self, limit: u32) -> &mut Select<'a> {
         self.limit = limit;
+        self
     }
 
-    pub fn offset(&mut self, offset: u32) {
+    pub fn offset(&mut self, offset: u32) -> &mut Select<'a> {
         self.offset = offset;
+        self
     }
 
     pub fn build(&self) -> String {
@@ -102,21 +104,21 @@ impl<'a> Select<'a> {
         statement.push_str(&self.where_.build());
 
         if self.group.len() > 0 {
-            statement.push_str("GROUP BY ");
-            statement.push_str(&format!("{} ", self.group.trim_end()));
+            statement.push_str(" GROUP BY ");
+            statement.push_str(&format!("{}", self.group.trim_end()));
         }
 
         if self.order.len() > 0 {
-            statement.push_str("ORDER BY ");
-            statement.push_str(&format!("{} ", self.order.trim_end()));
+            statement.push_str(" ORDER BY ");
+            statement.push_str(&format!("{}", self.order.trim_end()));
         }
 
         if self.limit > 0 {
-            statement.push_str(&format!("LIMIT {}", self.limit));
+            statement.push_str(&format!(" LIMIT {}", self.limit));
         }
 
         if self.offset > 0 && self.limit > 0 {
-            statement.push_str(&format!("OFFSET {}", self.offset));
+            statement.push_str(&format!(" OFFSET {}", self.offset));
         }
 
         statement = statement.trim().to_string() + ";";

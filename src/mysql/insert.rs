@@ -37,7 +37,7 @@ impl<'a> Insert<'a> {
         values.pop();
 
         statement.push_str(&format!("({}) VALUES ({})", columns, values));
-
+        statement = statement.trim().to_string() + ";";
         statement
     }
 }
