@@ -52,17 +52,9 @@ impl<'a> Select<'a> {
         self
     }
 
-    pub fn join(
-        &mut self,
-        table: &str,
-        on: &str,
-        join_type: JoinType,
-    ) -> &mut Select<'a> {
-        self.joins.push(Join::new(
-            table.to_string(),
-            on.to_string(),
-            join_type,
-        ));
+    pub fn join(&mut self, table: &str, on: &str, join_type: JoinType) -> &mut Select<'a> {
+        self.joins
+            .push(Join::new(table.to_string(), on.to_string(), join_type));
         self
     }
 
