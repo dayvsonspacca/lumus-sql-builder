@@ -8,16 +8,15 @@ The project is an SQL query builder that allows you to create complex SQL querie
 Here is an example of how the code can be used to build an SQL query:
 
 ```rust
-mod builder;
+use lua_sql_builder::mysql::{
+    join::JoinType,
+    select::Select,
+    where_::{Combiner, Where},
+};
 
-use builder::mysql::join::JoinType;
-use builder::mysql::select::Select;
-use builder::mysql::where_::{Combiner, Where};
-
-fn main() {
+pub fn main() {
     let mut select = Select::new();
     let mut where_ = Where::new(Combiner::And);
-
     where_
         .not_equal_to("email", "spacca.dayvson@gmail.com")
         .greater_than_equal("age", "2")
@@ -28,12 +27,13 @@ fn main() {
     select
         .columns("name, age, email, salary")
         .from("users_tb u")
-        .join("emails_tb e", "e.user_id = u.user_id", "", JoinType::Left)
-        .join("phones_tb p", "p.user_id = u.user_id", "", JoinType::Left)
+        .join("emails_tb e", "e.user_id = u.user_id", JoinType::Left)
+        .join("phones_tb p", "p.user_id = u.user_id", JoinType::Left)
         .where_(where_);
 
     println!("{}", select.build());
 }
+
 ```
 # Output: 
 ```sql
