@@ -1,12 +1,16 @@
 pub struct CreateTable<'a> {
     table: &'a str,
     columns: Vec<Column>,
-    if_not_exists: bool
+    if_not_exists: bool,
 }
 
 impl<'a> CreateTable<'a> {
     pub fn new(table: &'a str, if_not_exists: bool, columns: Vec<Column>) -> CreateTable<'a> {
-        CreateTable { table, columns, if_not_exists }
+        CreateTable {
+            table,
+            columns,
+            if_not_exists,
+        }
     }
 
     pub fn build(self) -> String {
