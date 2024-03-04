@@ -1,4 +1,4 @@
-# Lua sql builder
+# Lumus sql builder
 This repository contains a project written in Rust with the aim of building SQL queries. It was created as part of an effort to learn more about the Rust programming language and its applications.
 
 ## About project
@@ -8,7 +8,7 @@ The project is an SQL query builder that allows you to create complex SQL querie
 Here is an example of how the code can be used to build an SQL query:
 
 ```rust
-use lua_sql_builder::mysql::{
+use lumus_sql_builder::mysql::{
     join::JoinType,
     select::Select,
     where_::{Combiner, Where},

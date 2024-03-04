@@ -1,17 +1,17 @@
 [package]
-name = "lua-sql-builder"
-version = "0.1.4"
+name = "lumus-sql-builder"
+version = "0.1.0"
 edition = "2021"
 authors = ["Dayvson Spacca spacca.dayvson@gmail.com"]
 description = "Build sql statements programmatically and intuitively"
 readme = "README.md"
-repository = "https://github.com/dayvsonspacca/lua-sql-builder"
+repository = "https://github.com/dayvsonspacca/lumus-sql-builder"
 license = "MIT"
 keywords = ["sql"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
-name = "lua_sql_builder"
+name = "lumus_sql_builder"
 
 [dependencies]
