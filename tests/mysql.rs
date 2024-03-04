@@ -63,11 +63,7 @@ fn test_select_query() {
         .distinct()
         .columns("name, age")
         .from("users")
-        .join(
-            "emails",
-            "users.id = emails.user_id",
-            JoinType::Inner,
-        )
+        .join("emails", "users.id = emails.user_id", JoinType::Inner)
         .where_(where_)
         .group("department")
         .order("age DESC")
