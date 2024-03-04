@@ -1,4 +1,4 @@
-use lua_sql_builder::mysql::{
+use lumus_sql_builder::mysql::{
     create::Create,
     delete::Delete,
     insert::Insert,
@@ -66,7 +66,7 @@ fn test_select_query() {
         .join(
             "emails",
             "users.id = emails.user_id",
-            lua_sql_builder::mysql::join::JoinType::Inner,
+            JoinType::Inner,
         )
         .where_(where_)
         .group("department")
