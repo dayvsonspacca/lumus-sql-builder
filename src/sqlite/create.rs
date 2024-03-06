@@ -27,14 +27,14 @@ impl<'a> CreateTable<'a> {
         }
         statement.push('(');
         for (i, column) in self.columns.iter().enumerate() {
-            if i > 0 {
-                statement.push_str(&format!(", {}", column.statement));
-            } else {
-                statement.push_str(column.statement.as_str());
+            statement.push_str(&column.statement);
+
+            if i < self.columns.len() - 1 {
+                statement.push_str(", ");
             }
         }
-        statement.push(')');
-        statement.push(';');
+
+        statement.push_str(");");
         statement
     }
 }
@@ -45,7 +45,7 @@ pub struct Column {
 impl Column {
     pub fn new(name: &str) -> Column {
         Column {
-            statement: String::from(name),
+            statement: format!("{}", name),
         }
     }
 
@@ -53,4 +53,84 @@ impl Column {
         self.statement.push_str(&format!(" {}", expression));
         self
     }
+    
+    pub fn integer(mut self) -> Self {
+        self.statement.push_str(" INTEGER");
+        self
+    }
+    
+    pub fn text(mut self) -> Self {
+        self.statement.push_str(" TEXT");
+        self
+    }
+    
+    pub fn real(mut self) -> Self {
+        self.statement.push_str(" REAL");
+        self
+    }
+    
+    pub fn boolean(mut self) -> Self {
+        self.statement.push_str(" BOOLEAN");
+        self
+    }
+    
+    pub fn blob(mut self) -> Self {
+        self.statement.push_str(" BLOB");
+        self
+    }
+    
+    pub fn numeric(mut self) -> Self {
+        self.statement.push_str(" NUMERIC");
+        self
+    }
+    
+    pub fn date(mut self) -> Self {
+        self.statement.push_str(" DATE");
+        self
+    }
+    
+    pub fn time(mut self) -> Self {
+        self.statement.push_str(" TIME");
+        self
+    }
+    
+    pub fn datetime(mut self) -> Self {
+        self.statement.push_str(" DATETIME");
+        self
+    }
+    
+    pub fn check(mut self, condition: &str) -> Self {
+        self.statement.push_str(&format!(" CHECK ({})", condition));
+        self
+    }        
+
+    pub fn not_null(mut self) -> Self {
+        self.statement.push_str(" NOT NULL");
+        self
+    }
+
+    pub fn unique(mut self) -> Self {
+        self.statement.push_str(" UNIQUE");
+        self
+    }
+
+    pub fn default(mut self, value: &str) -> Self {
+        self.statement.push_str(&format!(" DEFAULT {}", value));
+        self
+    }
+
+    pub fn auto_increment(mut self) -> Self {
+        self.statement.push_str(" AUTOINCREMENT");
+        self
+    }
+
+    pub fn primary_key(mut self) -> Self {
+        self.statement.push_str(" PRIMARY KEY");
+        self
+    }
+
+    pub fn build(self) -> String {
+        self.statement
+    }
 }
+ 
