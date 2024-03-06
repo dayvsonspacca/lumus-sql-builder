@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### 🚀 Features
 
+- Add columns declaration via methods. - ([6a15992](https://github.com/dayvsonspacca/sql-query-builder/commit/6a15992525ff6e5a59b5e61b735866af43b26f87))
 - Add sqlite builder + basic create statements - ([5c4b285](https://github.com/dayvsonspacca/sql-query-builder/commit/5c4b2855b68d441cbaec8a68bdfb6697cd9530b2))
 - 0.1.4 - ([d66deae](https://github.com/dayvsonspacca/sql-query-builder/commit/d66deaebc09a1fdbd9df764141b08c901d12f3ef))
 - Add like and not like - ([7fdc05e](https://github.com/dayvsonspacca/sql-query-builder/commit/7fdc05e7dbd9b84c9606d7d475a0feebd5857dee))
@@ -43,6 +44,7 @@ All notable changes to this project will be documented in this file.
 
 ### 🚜 Refactor
 
+- Change if not exists specification. - ([746c513](https://github.com/dayvsonspacca/sql-query-builder/commit/746c513f6b3681ccd818d0981a61d7447b389f72))
 - Changes from tests - ([2612988](https://github.com/dayvsonspacca/sql-query-builder/commit/2612988b2a1ff773e1b5530f7a7fbaa3ec4038ba))
 - Change, strings to str in inserts constructors. - ([7f1ded1](https://github.com/dayvsonspacca/sql-query-builder/commit/7f1ded14e37683a40031fa3dc9fa64ece75f471f))
 - Change struct logic for use str - ([298f96c](https://github.com/dayvsonspacca/sql-query-builder/commit/298f96c7c94c327787fb62e54c8c8b3f4fc43265))
@@ -57,6 +59,7 @@ All notable changes to this project will be documented in this file.
 
 ### 📚 Documentation
 
+- Add project changelog - ([b284457](https://github.com/dayvsonspacca/sql-query-builder/commit/b284457edfcbe9abc6faa34583a1e744d5976826))
 - Update README.md - ([9fa8ae3](https://github.com/dayvsonspacca/sql-query-builder/commit/9fa8ae377a578ca4bb5d20aadba26ada0026b744))
 - Update README.md - ([19f9034](https://github.com/dayvsonspacca/sql-query-builder/commit/19f903407e3f41f47dbb90341e8687ae4d3d74ef))
 - Add information from crate - ([db1b6a3](https://github.com/dayvsonspacca/sql-query-builder/commit/db1b6a3719f8b673f2d15985b18e4e27bb814475))
@@ -74,12 +77,16 @@ All notable changes to this project will be documented in this file.
 
 ### 🧪 Testing
 
+- Add test from create columns - ([1cc7c55](https://github.com/dayvsonspacca/sql-query-builder/commit/1cc7c554469c86223527b6902051456a4b867409))
+- Update create sqlite tests. - ([8f722c2](https://github.com/dayvsonspacca/sql-query-builder/commit/8f722c2b94d214a4199736b939a3cb8ba77e8358))
 - Add tests from sqlite create statements - ([5662d22](https://github.com/dayvsonspacca/sql-query-builder/commit/5662d22a43800d2c673ce6e5c520331956a85bbf))
 - Adjust tests. - ([48799a6](https://github.com/dayvsonspacca/sql-query-builder/commit/48799a60d2a7d606a157fac397076c7bc62539bf))
 - Tests like and not_like - ([95601e2](https://github.com/dayvsonspacca/sql-query-builder/commit/95601e257f08e20e440404721de6cea2b635e1a7))
 
 ### ⚙️ Miscellaneous Tasks
 
+- Cargo fmt - ([f62a99d](https://github.com/dayvsonspacca/sql-query-builder/commit/f62a99d36607ec343a9bfdeb312c484accc42ccf))
+- Update workflow - ([efc8041](https://github.com/dayvsonspacca/sql-query-builder/commit/efc8041e3315c7a534e1ccc1ccf9e2b69319766f))
 - Cargo fmt - ([de257ea](https://github.com/dayvsonspacca/sql-query-builder/commit/de257ea6dfe16b8d43a0cd6d2b6a3bd763c7de3f))
 - Cargo fmt - ([f9186a4](https://github.com/dayvsonspacca/sql-query-builder/commit/f9186a40f316ec0e27884a0be5b7cff31cf96dbb))
 - Rename project - ([28408f4](https://github.com/dayvsonspacca/sql-query-builder/commit/28408f416b80577a3a5deadde44348f138e863db))
