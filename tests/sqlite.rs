@@ -1,6 +1,5 @@
 use lumus_sql_builder::sqlite::create::{Column, CreateTable};
 
-
 #[test]
 fn test_column_integer() {
     let column = Column::new("age").integer().build();
@@ -51,7 +50,11 @@ fn test_column_default() {
 
 #[test]
 fn test_column_auto_increment() {
-    let column = Column::new("id").integer().primary_key().auto_increment().build();
+    let column = Column::new("id")
+        .integer()
+        .primary_key()
+        .auto_increment()
+        .build();
     assert_eq!(column, "id INTEGER PRIMARY KEY AUTOINCREMENT");
 }
 

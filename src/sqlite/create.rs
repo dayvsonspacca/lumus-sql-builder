@@ -53,56 +53,56 @@ impl Column {
         self.statement.push_str(&format!(" {}", expression));
         self
     }
-    
+
     pub fn integer(mut self) -> Self {
         self.statement.push_str(" INTEGER");
         self
     }
-    
+
     pub fn text(mut self) -> Self {
         self.statement.push_str(" TEXT");
         self
     }
-    
+
     pub fn real(mut self) -> Self {
         self.statement.push_str(" REAL");
         self
     }
-    
+
     pub fn boolean(mut self) -> Self {
         self.statement.push_str(" BOOLEAN");
         self
     }
-    
+
     pub fn blob(mut self) -> Self {
         self.statement.push_str(" BLOB");
         self
     }
-    
+
     pub fn numeric(mut self) -> Self {
         self.statement.push_str(" NUMERIC");
         self
     }
-    
+
     pub fn date(mut self) -> Self {
         self.statement.push_str(" DATE");
         self
     }
-    
+
     pub fn time(mut self) -> Self {
         self.statement.push_str(" TIME");
         self
     }
-    
+
     pub fn datetime(mut self) -> Self {
         self.statement.push_str(" DATETIME");
         self
     }
-    
+
     pub fn check(mut self, condition: &str) -> Self {
         self.statement.push_str(&format!(" CHECK ({})", condition));
         self
-    }        
+    }
 
     pub fn not_null(mut self) -> Self {
         self.statement.push_str(" NOT NULL");
@@ -133,4 +133,3 @@ impl Column {
         self.statement
     }
 }
- 
