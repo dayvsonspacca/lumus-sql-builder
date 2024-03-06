@@ -96,3 +96,31 @@ fn test_create_table_if_not_exists() {
 
     assert_eq!(create, expected_sql);
 }
+
+#[test]
+fn test_complex_create_table() {
+    let create = CreateTable::new(
+        "complex_table",
+        vec![
+            Column::new("id").integer().primary_key().auto_increment(),
+            Column::new("name").text().not_null().unique(),
+            Column::new("age").integer().default("0").not_null(),
+            Column::new("price").real().default("0.0"),
+            Column::new("is_active").boolean().default("true"),
+            Column::new("blob_data").blob(),
+            Column::new("timestamp_data").datetime(),
+            Column::new("check_column").integer(),
+        ],
+    )
+    .if_not_exists()
+    .build();
+
+    let expected_sql =
+        "CREATE TABLE IF NOT EXISTS complex_table (id INTEGER PRIMARY KEY AUTOINCREMENT, \
+                        name TEXT NOT NULL UNIQUE, age INTEGER DEFAULT 0 NOT NULL, \
+                        price REAL DEFAULT 0.0, is_active BOOLEAN DEFAULT true, \
+                        blob_data BLOB, timestamp_data DATETIME, \
+                        check_column INTEGER);";
+
+    assert_eq!(create, expected_sql);
+}
