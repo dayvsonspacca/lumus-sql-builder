@@ -20,7 +20,7 @@ impl<'a> CreateTable<'a> {
         self
     }
 
-    pub fn build(self) -> String {
+    pub fn build(&self) -> String {
         let mut statement = String::new();
         if self.if_not_exists {
             statement.push_str(&format!("CREATE TABLE IF NOT EXISTS {} ", self.table));
@@ -38,6 +38,12 @@ impl<'a> CreateTable<'a> {
 
         statement.push_str(");");
         statement
+    }
+}
+
+impl<'a> fmt::Display for CreateTable<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.build())
     }
 }
 
