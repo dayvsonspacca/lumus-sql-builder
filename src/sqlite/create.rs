@@ -5,12 +5,17 @@ pub struct CreateTable<'a> {
 }
 
 impl<'a> CreateTable<'a> {
-    pub fn new(table: &'a str, if_not_exists: bool, columns: Vec<Column>) -> CreateTable<'a> {
+    pub fn new(table: &'a str, columns: Vec<Column>) -> CreateTable<'a> {
         CreateTable {
             table,
             columns,
-            if_not_exists,
+            if_not_exists: false,
         }
+    }
+
+    pub fn if_not_exists(mut self) -> Self {
+        self.if_not_exists = true;
+        self
     }
 
     pub fn build(self) -> String {
@@ -33,7 +38,6 @@ impl<'a> CreateTable<'a> {
         statement
     }
 }
-
 pub struct Column {
     statement: String,
 }
