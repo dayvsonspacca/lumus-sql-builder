@@ -167,3 +167,10 @@ fn test_select_with_offset() {
     let query = Select::new("logs").offset(20).build();
     assert_eq!(query, "SELECT * FROM logs OFFSET 20;");
 }
+
+#[test]
+fn test_column_literal() {
+    let column_with_literal = Column::new("age").literal("INTEGER NOT NULL").build();
+
+    assert_eq!(column_with_literal, "age INTEGER NOT NULL");
+}
