@@ -1,4 +1,5 @@
 use lumus_sql_builder::sqlite::create::{Column, CreateTable};
+use lumus_sql_builder::sqlite::select::Select;
 
 #[test]
 fn test_column_integer() {
@@ -123,4 +124,46 @@ fn test_complex_create_table() {
                         check_column INTEGER);";
 
     assert_eq!(create, expected_sql);
+}
+
+#[test]
+fn test_select_without_options() {
+    let query = Select::new("users").build();
+    assert_eq!(query, "SELECT * FROM users;");
+}
+
+#[test]
+fn test_select_with_distinct() {
+    let query = Select::new("orders").distinct().build();
+    assert_eq!(query, "SELECT DISTINCT * FROM orders;");
+}
+
+#[test]
+fn test_select_with_columns_and_order() {
+    let query = Select::new("products")
+        .columns("name, price")
+        .order("price DESC")
+        .build();
+    assert_eq!(
+        query,
+        "SELECT name, price FROM products ORDER BY price DESC;"
+    );
+}
+
+#[test]
+fn test_select_with_group_and_limit() {
+    let query = Select::new("transactions")
+        .group("category")
+        .limit(10)
+        .build();
+    assert_eq!(
+        query,
+        "SELECT * FROM transactions GROUP BY category LIMIT 10;"
+    );
+}
+
+#[test]
+fn test_select_with_offset() {
+    let query = Select::new("logs").offset(20).build();
+    assert_eq!(query, "SELECT * FROM logs OFFSET 20;");
 }
