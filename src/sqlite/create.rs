@@ -105,13 +105,13 @@ impl fmt::Display for ColumnOption {
         }
     }
 }
-
 /// Represents a table column with a name, data type, and options.
 #[derive(Debug)]
 pub struct Column {
     name: String,
     column_type: Option<ColumnType>,
     options: Vec<ColumnOption>,
+    literal: Option<String>,
 }
 
 impl Column {
@@ -121,6 +121,7 @@ impl Column {
             name: name.to_string(),
             column_type: None,
             options: Vec::new(),
+            literal: None,
         }
     }
 
@@ -208,6 +209,12 @@ impl Column {
         self
     }
 
+    /// Specifies a `literal` value for the column.
+    pub fn literal(mut self, value: &str) -> Self {
+        self.literal = Some(value.to_string());
+        self
+    }
+
     /// Builds and returns the SQL representation of the column.
     pub fn build(&self) -> String {
         let column_type_str = match &self.column_type {
@@ -230,6 +237,15 @@ impl Column {
             );
         }
 
-        format!("{} {}", self.name, column_type_str)
+        if !column_type_str.is_empty() {
+            return format!("{} {}", self.name, column_type_str);
+        }
+
+        let literal_str = match &self.literal {
+            Some(lit) => lit.clone(),
+            None => String::new(),
+        };
+
+        return format!("{} {}", self.name, literal_str);
     }
 }
