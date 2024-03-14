@@ -1,5 +1,4 @@
-use lumus_sql_builder::sqlite::Select;
-use lumus_sql_builder::sqlite::{Column, CreateTable};
+use lumus_sql_builder::sqlite::{Column, CreateTable, Select};
 
 #[test]
 fn test_column_integer() {

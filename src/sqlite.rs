@@ -9,6 +9,14 @@ pub struct CreateTable {
 
 impl CreateTable {
     /// Creates a new `CreateTable` instance with the given table name and columns.
+    /// # Example
+    /// ```
+    /// use lumus_sql_builder::sqlite::{CreateTable, Column};
+    /// CreateTable::new("users", vec![
+    ///     Column::new("name").text().not_null().primary_key(),
+    ///     Column::new("age").literal("INTEGER NOT NULL"),
+    /// ]);
+    /// ```
     pub fn new<T: Into<String>>(table: T, columns: Vec<Column>) -> CreateTable {
         CreateTable {
             table: table.into(),
@@ -116,6 +124,11 @@ pub struct Column {
 
 impl Column {
     /// Creates a new `Column` instance with the given column name.
+    /// # Example
+    /// ```
+    /// use lumus_sql_builder::sqlite::Column;
+    /// Column::new("name").text().not_null();
+    /// ```
     pub fn new(name: &str) -> Column {
         Self {
             name: name.to_string(),
@@ -250,6 +263,12 @@ impl Column {
     }
 }
 
+impl fmt::Display for Column {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.build())
+    }
+}
+
 pub struct Select {
     table: String,
     distinct: bool,
@@ -261,6 +280,12 @@ pub struct Select {
 }
 
 impl Select {
+    /// Creates a new `Select` instance with the specified table name.
+    /// # Example
+    /// ```
+    /// use lumus_sql_builder::sqlite::Select;
+    /// Select::new("users").columns("name, age");
+    /// ```
     pub fn new<T: Into<String>>(table: T) -> Select {
         Select {
             table: table.into(),
@@ -273,36 +298,43 @@ impl Select {
         }
     }
 
+    /// Specifies that the select statement should return distinct rows.
     pub fn distinct(&mut self) -> &mut Self {
         self.distinct = true;
         self
     }
 
+    /// Specifies the columns to be selected in the query.
     pub fn columns<T: Into<String>>(&mut self, columns: T) -> &mut Self {
         self.columns = Some(columns.into());
         self
     }
 
+    /// Specifies the grouping for the query results.
     pub fn group<T: Into<String>>(&mut self, group: T) -> &mut Self {
         self.group = Some(group.into());
         self
     }
 
+    /// Specifies the ordering for the query results.
     pub fn order<T: Into<String>>(&mut self, order: T) -> &mut Self {
         self.order = Some(order.into());
         self
     }
 
+    /// Specifies the maximum number of rows to be returned by the query.
     pub fn limit(&mut self, limit: u32) -> &mut Self {
         self.limit = Some(limit);
         self
     }
 
+    /// Specifies the offset for the query results.
     pub fn offset(&mut self, offset: u32) -> &mut Self {
         self.offset = Some(offset);
         self
     }
 
+    /// Builds and returns the SQL statement for the select query.
     pub fn build(&self) -> String {
         let mut statement = String::from("SELECT");
 
@@ -336,5 +368,11 @@ impl Select {
 
         statement.push(';');
         statement
+    }
+}
+
+impl fmt::Display for Select {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.build())
     }
 }
