@@ -1,17 +1,17 @@
 use core::fmt;
 
 /// Represents the creation of a table with specified columns and options.
-pub struct CreateTable<'a> {
-    table: &'a str,
+pub struct CreateTable {
+    table: String,
     columns: Vec<Column>,
     if_not_exists: bool,
 }
 
-impl<'a> CreateTable<'a> {
+impl CreateTable {
     /// Creates a new `CreateTable` instance with the given table name and columns.
-    pub fn new(table: &'a str, columns: Vec<Column>) -> CreateTable<'a> {
+    pub fn new<T: Into<String>>(table: T, columns: Vec<Column>) -> CreateTable {
         CreateTable {
-            table,
+            table: table.into(),
             columns,
             if_not_exists: false,
         }
@@ -46,7 +46,7 @@ impl<'a> CreateTable<'a> {
 }
 
 /// Implementation of the Display trait for `CreateTable`, allowing it to be printed.
-impl<'a> fmt::Display for CreateTable<'a> {
+impl fmt::Display for CreateTable {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.build())
     }
@@ -116,7 +116,7 @@ pub struct Column {
 
 impl Column {
     /// Creates a new `Column` instance with the given column name.
-    pub fn new(name: &str) -> Self {
+    pub fn new(name: &str) -> Column {
         Self {
             name: name.to_string(),
             column_type: None,
