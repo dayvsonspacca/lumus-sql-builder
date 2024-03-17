@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 
 ### 🚀 Features
 
+- Add column literal. - ([218faeb](https://github.com/dayvsonspacca/lua-sql-builder/commit/218faeb30e3c00d41ca126080a8c781be466bd0d))
+- Add select for sqlite - ([7fe265a](https://github.com/dayvsonspacca/lua-sql-builder/commit/7fe265a49c8f6b33dd7acff7c5cbb5b67e76bb75))
 - Implements fmt::Display from sqlite CreateTable. - ([7114fd1](https://github.com/dayvsonspacca/lua-sql-builder/commit/7114fd137b944407145f638bde6a27daea49bff3))
 - Add columns declaration via methods. - ([6a15992](https://github.com/dayvsonspacca/lua-sql-builder/commit/6a15992525ff6e5a59b5e61b735866af43b26f87))
 - Add sqlite builder + basic create statements - ([5c4b285](https://github.com/dayvsonspacca/lua-sql-builder/commit/5c4b2855b68d441cbaec8a68bdfb6697cd9530b2))
@@ -48,6 +50,8 @@ All notable changes to this project will be documented in this file.
 
 ### 🚜 Refactor
 
+- Merging sqlite sub-modules. - ([63eeadd](https://github.com/dayvsonspacca/lua-sql-builder/commit/63eeadd3fc108e0d07343b26599ac5cd2fa50cb8))
+- Removing use of str, parsing to String in sqlite create - ([402977c](https://github.com/dayvsonspacca/lua-sql-builder/commit/402977c9769e43f7ab71bec27d43b22a811d60f6))
 - Change logic from concate string in statement to concate type and options. - ([9c836ec](https://github.com/dayvsonspacca/lua-sql-builder/commit/9c836ec5c5a45c3ebe7e96d8f95563982610f27c))
 - Change if not exists specification. - ([746c513](https://github.com/dayvsonspacca/lua-sql-builder/commit/746c513f6b3681ccd818d0981a61d7447b389f72))
 - Changes from tests - ([2612988](https://github.com/dayvsonspacca/lua-sql-builder/commit/2612988b2a1ff773e1b5530f7a7fbaa3ec4038ba))
@@ -64,6 +68,8 @@ All notable changes to this project will be documented in this file.
 
 ### 📚 Documentation
 
+- Add examples + comments for sqlite module - ([eb98138](https://github.com/dayvsonspacca/lua-sql-builder/commit/eb981382a5c3af40adcd63f42c0c780c2cc8ede0))
+- Update CHANGELOG. - ([6db1c37](https://github.com/dayvsonspacca/lua-sql-builder/commit/6db1c3726376e27796bb9f3fb65f530ee7e8f737))
 - Update CHANGELOG - ([04c064f](https://github.com/dayvsonspacca/lua-sql-builder/commit/04c064f111b611454c5463ec374caff39663c2ea))
 - Add project changelog - ([b284457](https://github.com/dayvsonspacca/lua-sql-builder/commit/b284457edfcbe9abc6faa34583a1e744d5976826))
 - Update README.md - ([9fa8ae3](https://github.com/dayvsonspacca/lua-sql-builder/commit/9fa8ae377a578ca4bb5d20aadba26ada0026b744))
@@ -83,6 +89,8 @@ All notable changes to this project will be documented in this file.
 
 ### 🧪 Testing
 
+- Add test from sqlite literal. - ([38f8eb5](https://github.com/dayvsonspacca/lua-sql-builder/commit/38f8eb5f1d5aef023aeac5554850848605464a2e))
+- Add test for select sqlite. - ([0d4ca5e](https://github.com/dayvsonspacca/lua-sql-builder/commit/0d4ca5e18e5276581deb346127fec68f8f3933c3))
 - Add sqlite complex create table test. - ([ff41afc](https://github.com/dayvsonspacca/lua-sql-builder/commit/ff41afcc11f539a5b9215c71fbe5e168b10fbfe1))
 - Add test from create columns - ([1cc7c55](https://github.com/dayvsonspacca/lua-sql-builder/commit/1cc7c554469c86223527b6902051456a4b867409))
 - Update create sqlite tests. - ([8f722c2](https://github.com/dayvsonspacca/lua-sql-builder/commit/8f722c2b94d214a4199736b939a3cb8ba77e8358))
