@@ -8,34 +8,32 @@ The project is an SQL query builder that allows you to create complex SQL querie
 Here is an example of how the code can be used to build an SQL query:
 
 ```rust
-use lumus_sql_builder::mysql::{
-    join::JoinType,
-    select::Select,
-    where_::{Combiner, Where},
-};
+use lumus_sql_builder::sqlite::{CreateTable, Column};
 
-pub fn main() {
-    let mut select = Select::new();
-    let mut where_ = Where::new(Combiner::And);
-    where_
-        .not_equal_to("email", "spacca.dayvson@gmail.com")
-        .greater_than_equal("age", "2")
-        .less_than("salary", "230.00")
-        .less_than_equal("age", "25")
-        .is_null("genre");
+fn main() {
+    let create_table = CreateTable::new("employees", vec![
+        Column::new("id").integer().primary_key().auto_increment(),
+        Column::new("name").text().not_null(),
+        Column::new("age").integer().not_null(),
+        Column::new("department").text().default("'Undefined'"),
+        Column::new("salary").real(),
+        Column::new("hired_date").datetime(),
+        Column::new("manager_id").integer()
+    ]);
 
-    select
-        .columns("name, age, email, salary")
-        .from("users_tb u")
-        .join("emails_tb e", "e.user_id = u.user_id", JoinType::Left)
-        .join("phones_tb p", "p.user_id = u.user_id", JoinType::Left)
-        .where_(where_);
-
-    println!("{}", select.build());
+    println!("{}", create_table.build());
 }
 
 ```
 # Output: 
 ```sql
-SELECT name, age, email, salary FROM users_tb u LEFT JOIN emails_tb e ON e.user_id = u.user_id LEFT JOIN phones_tb p ON p.user_id = u.user_id WHERE email != 'spacca.dayvson@gmail.com' AND age >= 2 AND salary < 230.00 AND age <= 25 AND genre ISNULL;
+CREATE TABLE employees (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    age INTEGER NOT NULL,
+    department TEXT DEFAULT 'Undefined',
+    salary REAL
+    hired_date DATETIME,
+    manager_id INTEGER
+);
 ```
