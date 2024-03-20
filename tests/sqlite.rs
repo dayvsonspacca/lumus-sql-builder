@@ -1,4 +1,4 @@
-use lumus_sql_builder::sqlite::{Column, CreateTable, Select};
+use lumus_sql_builder::sqlite::{Column, CreateTable, Insert, Select};
 
 #[test]
 fn test_column_integer() {
@@ -172,4 +172,139 @@ fn test_column_literal() {
     let column_with_literal = Column::new("age").literal("INTEGER NOT NULL").build();
 
     assert_eq!(column_with_literal, "age INTEGER NOT NULL");
+}
+
+/// # `Insert` tests zone
+
+#[test]
+fn test_new_insert_instance() {
+    let insert_query = Insert::new("test_table");
+    assert_eq!(insert_query.table, "test_table");
+    assert_eq!(insert_query.values.len(), 0);
+}
+
+#[test]
+fn test_set_values_for_insert() {
+    let insert_query = Insert::new("test_table").values(vec![("name", "John"), ("age", "30")]);
+    assert_eq!(insert_query.values.len(), 2);
+    assert_eq!(
+        insert_query.values[0],
+        ("name".to_string(), "John".to_string())
+    );
+    assert_eq!(
+        insert_query.values[1],
+        ("age".to_string(), "30".to_string())
+    );
+}
+
+#[test]
+fn test_build_insert_query() {
+    let insert_query = Insert::new("test_table").values(vec![("name", "John"), ("age", "30")]);
+    assert_eq!(
+        insert_query.build(),
+        "INSERT INTO test_table (name, age) VALUES ('John', '30');"
+    );
+}
+
+#[test]
+fn test_insert_query_with_empty_values() {
+    let insert_query = Insert::new("test_table").values(vec![("name", ""), ("age", "30")]);
+    assert_eq!(
+        insert_query.build(),
+        "INSERT INTO test_table (name, age) VALUES ('', '30');"
+    );
+}
+
+#[test]
+fn test_insert_query_with_medium_values() {
+    let insert_query = Insert::new("test_table").values(vec![
+        ("name", "John"),
+        ("age", "30"),
+        ("city", "New York"),
+        ("occupation", "Engineer"),
+    ]);
+    assert_eq!(
+        insert_query.build(),
+        "INSERT INTO test_table (name, age, city, occupation) VALUES ('John', '30', 'New York', 'Engineer');"
+    );
+}
+
+#[test]
+fn test_insert_query_with_large_values() {
+    let insert_query = Insert::new("test_table").values(vec![
+        ("name", "John"),
+        ("age", "30"),
+        ("city", "New York"),
+        ("occupation", "Engineer"),
+        ("salary", "100000"),
+        ("email", "john@example.com"),
+        ("phone", "123-456-7890"),
+    ]);
+    assert_eq!(
+        insert_query.build(),
+        "INSERT INTO test_table (name, age, city, occupation, salary, email, phone) VALUES ('John', '30', 'New York', 'Engineer', '100000', 'john@example.com', '123-456-7890');"
+    );
+}
+
+#[test]
+fn test_insert_query_with_many_values() {
+    let insert_query = Insert::new("test_table").values(vec![
+        ("name", "John"),
+        ("age", "30"),
+        ("city", "New York"),
+        ("occupation", "Engineer"),
+        ("salary", "100000"),
+        ("email", "john@example.com"),
+        ("phone", "123-456-7890"),
+        ("address", "123 Main St"),
+        ("department", "Engineering"),
+        ("company", "TechCorp"),
+    ]);
+    assert_eq!(
+        insert_query.build(),
+        "INSERT INTO test_table (name, age, city, occupation, salary, email, phone, address, department, company) VALUES ('John', '30', 'New York', 'Engineer', '100000', 'john@example.com', '123-456-7890', '123 Main St', 'Engineering', 'TechCorp');"
+    );
+}
+
+#[test]
+fn test_insert_query_with_repeated_values() {
+    let insert_query = Insert::new("test_table").values(vec![
+        ("name", "John"),
+        ("age", "30"),
+        ("name", "Jane"),
+        ("age", "25"),
+    ]);
+    assert_eq!(
+        insert_query.build(),
+        "INSERT INTO test_table (name, age, name, age) VALUES ('John', '30', 'Jane', '25');"
+    );
+}
+
+#[test]
+fn test_insert_query_with_null_values() {
+    let insert_query = Insert::new("test_table").values(vec![
+        ("name", "John"),
+        ("age", ""),
+        ("city", "New York"),
+        ("occupation", ""),
+        ("salary", ""),
+    ]);
+    assert_eq!(
+        insert_query.build(),
+        "INSERT INTO test_table (name, age, city, occupation, salary) VALUES ('John', '', 'New York', '', '');"
+    );
+}
+
+#[test]
+fn test_insert_query_with_special_characters() {
+    let insert_query = Insert::new("test_table").values(vec![
+        ("name", "John O'Connor"),
+        ("age", "30"),
+        ("city", "New York"),
+        ("occupation", "Software Engineer"),
+    ]);
+    assert_eq!(
+        insert_query.build(),
+        "INSERT INTO test_table (name, age, city, occupation) VALUES ('John O'Connor', '30', 'New York', 'Software Engineer');"
+    );
 }
