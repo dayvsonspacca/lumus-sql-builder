@@ -1,5 +1,4 @@
 use core::fmt;
-
 /// Represents the creation of a table with specified columns and options.
 pub struct CreateTable {
     table: String,
@@ -372,6 +371,66 @@ impl Select {
 }
 
 impl fmt::Display for Select {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.build())
+    }
+}
+
+pub struct Insert {
+    pub table: String,
+    pub values: Vec<(String, String)>,
+}
+
+impl Insert {
+    /// Creates a new `Insert` instance with the given table name.
+    /// # Example
+    /// ```
+    /// use lumus_sql_builder::sqlite::Insert;
+    ///
+    /// Insert::new("metas_clientes_tb").values(vec![
+    ///     ("name", "João"),
+    ///     ("age", "30"),
+    ///     ("department", "TI"),
+    ///     ("salary", "5000.00"),
+    ///     ("hired_date", "2024-03-20"),
+    ///     ("manager_id", "1"),
+    /// ]);
+    /// ```
+    pub fn new<T: Into<String>>(table: T) -> Insert {
+        Insert {
+            table: table.into(),
+            values: Vec::new(),
+        }
+    }
+
+    /// Sets the values to be inserted.
+    pub fn values<T: ToString>(mut self, values: Vec<(&str, T)>) -> Self {
+        self.values = values
+            .into_iter()
+            .map(|(col, val)| (col.to_string(), val.to_string()))
+            .collect();
+        self
+    }
+
+    /// Builds and returns the SQL statement for the `INSERT` query.
+    pub fn build(&self) -> String {
+        let columns: Vec<String> = self.values.iter().map(|(col, _)| col.clone()).collect();
+        let values: Vec<String> = self
+            .values
+            .iter()
+            .map(|(_, val)| format!("'{}'", val))
+            .collect();
+
+        format!(
+            "INSERT INTO {} ({}) VALUES ({});",
+            self.table,
+            columns.join(", "),
+            values.join(", ")
+        )
+    }
+}
+
+impl fmt::Display for Insert {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.build())
     }
