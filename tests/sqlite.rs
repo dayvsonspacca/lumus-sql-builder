@@ -308,3 +308,60 @@ fn test_insert_query_with_special_characters() {
         "INSERT INTO test_table (name, age, city, occupation) VALUES ('John O'Connor', '30', 'New York', 'Software Engineer');"
     );
 }
+
+#[test]
+fn test_create_products_table() {
+    let connection = sqlite::open("test.sqlite").unwrap();
+
+    let create_table1 = CreateTable::new(
+        "products",
+        vec![
+            Column::new("id")
+                .integer()
+                .not_null()
+                .primary_key()
+                .auto_increment(),
+            Column::new("name").text().not_null().unique(),
+            Column::new("description").text(),
+            Column::new("price").real().not_null(),
+            Column::new("stock").integer().not_null().default("0"),
+            Column::new("created_at")
+                .datetime()
+                .default("CURRENT_TIMESTAMP"),
+            Column::new("updated_at")
+                .datetime()
+                .default("CURRENT_TIMESTAMP"),
+        ],
+    )
+    .if_not_exists();
+
+    let create_table2 = CreateTable::new(
+        "users",
+        vec![
+            Column::new("id")
+                .integer()
+                .not_null()
+                .primary_key()
+                .auto_increment(),
+            Column::new("username").text().not_null().unique(),
+            Column::new("email").text().not_null().unique(),
+            Column::new("password").text().not_null(),
+            Column::new("created_at")
+                .datetime()
+                .default("CURRENT_TIMESTAMP"),
+            Column::new("updated_at")
+                .datetime()
+                .default("CURRENT_TIMESTAMP"),
+        ],
+    )
+    .if_not_exists();
+
+    let expected_sql1 = "CREATE TABLE IF NOT EXISTS products (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL UNIQUE, description TEXT, price REAL NOT NULL, stock INTEGER NOT NULL DEFAULT 0, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, updated_at DATETIME DEFAULT CURRENT_TIMESTAMP);";
+    let expected_sql2 = "CREATE TABLE IF NOT EXISTS users (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, email TEXT NOT NULL UNIQUE, password TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, updated_at DATETIME DEFAULT CURRENT_TIMESTAMP);";
+
+    assert_eq!(create_table1.build(), expected_sql1);
+    assert_eq!(create_table2.build(), expected_sql2);
+
+    connection.execute(create_table1.build()).unwrap();
+    connection.execute(create_table2.build()).unwrap();
+}
