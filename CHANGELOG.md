@@ -5,10 +5,12 @@ All notable changes to this project will be documented in this file.
 
 ### 📢 Releases
 
+- 0.1.2 - ([ef81ab7](https://github.com/dayvsonspacca/lua-sql-builder/commit/ef81ab7ad45b93b97be1f5639bc2df0bd48d50e5))
 - 0.1.1 - ([7082cdd](https://github.com/dayvsonspacca/lua-sql-builder/commit/7082cddf92bedd79bdce50bda08c9a94e40c1c14))
 
 ### 🚀 Features
 
+- Add insert builder for sqlite. - ([008a7ca](https://github.com/dayvsonspacca/lua-sql-builder/commit/008a7cad0f64bed1298dbffd75faaa55397ef489))
 - Add column literal. - ([218faeb](https://github.com/dayvsonspacca/lua-sql-builder/commit/218faeb30e3c00d41ca126080a8c781be466bd0d))
 - Add select for sqlite - ([7fe265a](https://github.com/dayvsonspacca/lua-sql-builder/commit/7fe265a49c8f6b33dd7acff7c5cbb5b67e76bb75))
 - Implements fmt::Display from sqlite CreateTable. - ([7114fd1](https://github.com/dayvsonspacca/lua-sql-builder/commit/7114fd137b944407145f638bde6a27daea49bff3))
@@ -89,6 +91,9 @@ All notable changes to this project will be documented in this file.
 
 ### 🧪 Testing
 
+- Combine sqlite tests - ([d44dbe5](https://github.com/dayvsonspacca/lua-sql-builder/commit/d44dbe57b8265e9b8c073aa3f1a29e1f22e6f762))
+- Start new test format - ([089fc8e](https://github.com/dayvsonspacca/lua-sql-builder/commit/089fc8ea7e3ad7de52bba68c58e5306112f9b5f9))
+- Tests for sqlite insert builder - ([dd69487](https://github.com/dayvsonspacca/lua-sql-builder/commit/dd69487c921ef22d201dd751869979b27aea8ddc))
 - Add test from sqlite literal. - ([38f8eb5](https://github.com/dayvsonspacca/lua-sql-builder/commit/38f8eb5f1d5aef023aeac5554850848605464a2e))
 - Add test for select sqlite. - ([0d4ca5e](https://github.com/dayvsonspacca/lua-sql-builder/commit/0d4ca5e18e5276581deb346127fec68f8f3933c3))
 - Add sqlite complex create table test. - ([ff41afc](https://github.com/dayvsonspacca/lua-sql-builder/commit/ff41afcc11f539a5b9215c71fbe5e168b10fbfe1))
@@ -100,6 +105,7 @@ All notable changes to this project will be documented in this file.
 
 ### ⚙️ Miscellaneous Tasks
 
+- Disabling mysql module for while. - ([a5c4b15](https://github.com/dayvsonspacca/lua-sql-builder/commit/a5c4b15031aba6253ba0ce920bfc82719c20a3fe))
 - Add comments for better code readability - ([0b728e7](https://github.com/dayvsonspacca/lua-sql-builder/commit/0b728e76c0c9cac84533729898a76a65ec165f59))
 - Update cliff, group ci and chore. - ([9e7a615](https://github.com/dayvsonspacca/lua-sql-builder/commit/9e7a615f63479847d0de2b8c4254d0ff9525400c))
 - Carfo fmt - ([f62a99d](https://github.com/dayvsonspacca/lua-sql-builder/commit/f62a99d36607ec343a9bfdeb312c484accc42ccf))
