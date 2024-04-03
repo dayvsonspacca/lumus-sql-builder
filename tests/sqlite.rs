@@ -1,6 +1,8 @@
 use lumus_sql_builder::sqlite::{Column, CreateTable, Insert, Select};
 use sqlite::Connection;
 
+const TEST_DB:  &str = "test.sqlite";
+
 #[test]
 fn test_column_integer() {
     let column = Column::new("age").integer().build();
@@ -312,7 +314,7 @@ fn test_insert_query_with_special_characters() {
 
 #[test]
 fn teste_create_tables_in_db() {
-    let connection = sqlite::open("test.sqlite").unwrap();
+    let connection = sqlite::open(TEST_DB).expect("Failed to open database connection");
 
     test_create_products_table(&connection);
     test_create_users_table(&connection);
@@ -372,4 +374,34 @@ fn test_create_users_table(connection: &Connection) {
 
     assert_eq!(create_table.build(), expected_sql);
     connection.execute(create_table.build()).unwrap();
+}
+
+#[test]
+fn test_insert_data_into_database() {
+    let connection = Connection::open(TEST_DB).expect("Failed to open database connection");
+
+    test_create_products_table(&connection);
+    insert_sample_data(&connection);
+
+    select_sample_data(&connection);
+}
+
+fn insert_sample_data(connection: &Connection) {
+    let insert_query =
+        Insert::new("products").values(vec![("name", "Product A"), ("price", "100.0")]);
+    connection
+        .execute(insert_query.build())
+        .expect("Failed to insert data into database");
+}
+
+fn select_sample_data(connection: &Connection) {
+    let query = Select::new("products").columns("name, price").build();
+    connection
+        .iterate(query, |pairs| {
+            for &(name, value) in pairs.iter() {
+                println!("{} = {}", name, value.unwrap());
+            }
+            true
+        })
+        .expect("Failed to iterate");
 }
