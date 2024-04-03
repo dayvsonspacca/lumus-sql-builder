@@ -1,7 +1,8 @@
 use lumus_sql_builder::sqlite::{Column, CreateTable, Insert, Select};
 use sqlite::Connection;
+use std::fs;
 
-const TEST_DB:  &str = "test.sqlite";
+const TEST_DB: &str = "test.sqlite";
 
 #[test]
 fn test_column_integer() {
@@ -318,6 +319,13 @@ fn teste_create_tables_in_db() {
 
     test_create_products_table(&connection);
     test_create_users_table(&connection);
+    test_insert_sample_data_products(&connection);
+    test_select_sample_data_products(&connection);
+
+    match fs::remove_file(TEST_DB) {
+        Ok(()) => println!("Wiping database..."),
+        Err(e) => println!("Failde to wipe DB. {}", e),
+    }
 }
 
 fn test_create_products_table(connection: &Connection) {
@@ -376,17 +384,7 @@ fn test_create_users_table(connection: &Connection) {
     connection.execute(create_table.build()).unwrap();
 }
 
-#[test]
-fn test_insert_data_into_database() {
-    let connection = Connection::open(TEST_DB).expect("Failed to open database connection");
-
-    test_create_products_table(&connection);
-    insert_sample_data(&connection);
-
-    select_sample_data(&connection);
-}
-
-fn insert_sample_data(connection: &Connection) {
+fn test_insert_sample_data_products(connection: &Connection) {
     let insert_query =
         Insert::new("products").values(vec![("name", "Product A"), ("price", "100.0")]);
     connection
@@ -394,7 +392,7 @@ fn insert_sample_data(connection: &Connection) {
         .expect("Failed to insert data into database");
 }
 
-fn select_sample_data(connection: &Connection) {
+fn test_select_sample_data_products(connection: &Connection) {
     let query = Select::new("products").columns("name, price").build();
     connection
         .iterate(query, |pairs| {
