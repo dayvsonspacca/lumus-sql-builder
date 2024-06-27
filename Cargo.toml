@@ -7,7 +7,7 @@ description = "Build sql statements programmatically and intuitively"
 readme = "README.md"
 repository = "https://github.com/dayvsonspacca/lumus-sql-builder"
 license = "MIT"
-keywords = ["sql", "sqlite]
+keywords = ["sql", "sqlite"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
