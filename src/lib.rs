@@ -1,3 +1,3 @@
 // pub mod mysql;
-pub mod sqlite;
 pub mod errors;
+pub mod sqlite;
