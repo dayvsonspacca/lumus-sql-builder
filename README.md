@@ -20,7 +20,7 @@ fn main() {
         Column::new("manager_id").integer()
     ]);
 
-    println!("{}", create_table.build());
+    println!("{}", create_table.build().unwrap());
 }
 
 ```

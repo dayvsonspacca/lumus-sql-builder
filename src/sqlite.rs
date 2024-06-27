@@ -1,4 +1,6 @@
+use crate::errors::SqlBuilderError;
 use core::fmt;
+
 /// Represents the creation of a table with specified columns and options.
 pub struct CreateTable {
     table: String,
@@ -13,7 +15,6 @@ impl CreateTable {
     /// use lumus_sql_builder::sqlite::{CreateTable, Column};
     /// CreateTable::new("users", vec![
     ///     Column::new("name").text().not_null().primary_key(),
-    ///     Column::new("age").literal("INTEGER NOT NULL"),
     /// ]);
     /// ```
     pub fn new<T: Into<String>>(table: T, columns: Vec<Column>) -> CreateTable {
@@ -31,31 +32,38 @@ impl CreateTable {
     }
 
     /// Builds and returns the SQL statement for creating the table.
-    pub fn build(&self) -> String {
-        let mut statement = String::new();
-        if self.if_not_exists {
-            statement.push_str(&format!("CREATE TABLE IF NOT EXISTS {} ", self.table));
+    pub fn build(&self) -> Result<String, SqlBuilderError> {
+        if self.table.is_empty() {
+            return Err(SqlBuilderError::EmptyTableName);
+        }
+
+        if self.columns.is_empty() {
+            return Err(SqlBuilderError::NoColumnsSpecified);
+        }
+
+        let mut statement = if self.if_not_exists {
+            format!("CREATE TABLE IF NOT EXISTS {} (", self.table)
         } else {
-            statement.push_str(&format!("CREATE TABLE {} ", self.table));
-        }
-        statement.push('(');
-        for (i, column) in self.columns.iter().enumerate() {
-            statement.push_str(&column.build());
+            format!("CREATE TABLE {} (", self.table)
+        };
 
-            if i < self.columns.len() - 1 {
-                statement.push_str(", ");
-            }
-        }
+        let columns_sql: Result<Vec<String>, SqlBuilderError> =
+            self.columns.iter().map(|col| col.build()).collect();
 
+        statement.push_str(&columns_sql?.join(", "));
         statement.push_str(");");
-        statement
+
+        Ok(statement)
     }
 }
 
 /// Implementation of the Display trait for `CreateTable`, allowing it to be printed.
 impl fmt::Display for CreateTable {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.build())
+        match self.build() {
+            Err(e) => write!(f, "{}", e),
+            Ok(s) => write!(f, "{}", s),
+        }
     }
 }
 
@@ -118,7 +126,6 @@ pub struct Column {
     name: String,
     column_type: Option<ColumnType>,
     options: Vec<ColumnOption>,
-    literal: Option<String>,
 }
 
 impl Column {
@@ -133,7 +140,6 @@ impl Column {
             name: name.to_string(),
             column_type: None,
             options: Vec::new(),
-            literal: None,
         }
     }
 
@@ -221,50 +227,34 @@ impl Column {
         self
     }
 
-    /// Specifies a `literal` value for the column.
-    pub fn literal(mut self, value: &str) -> Self {
-        self.literal = Some(value.to_string());
-        self
-    }
-
     /// Builds and returns the SQL representation of the column.
-    pub fn build(&self) -> String {
+    pub fn build(&self) -> Result<String, SqlBuilderError> {
+        if self.name.is_empty() {
+            return Err(SqlBuilderError::EmptyColumnName);
+        }
+
         let column_type_str = match &self.column_type {
             Some(ct) => ct.to_string(),
-            None => String::new(),
+            None => return Err(SqlBuilderError::InvalidColumnType),
         };
 
-        let options_str: String = self
+        let options_str = self
             .options
             .iter()
             .map(|opt| opt.to_string())
             .collect::<Vec<String>>()
             .join(" ");
 
-        if options_str.len() > 0 {
-            return format!(
-                "{}{}",
-                self.name,
-                format!(" {} {}", column_type_str, options_str)
-            );
-        }
-
-        if !column_type_str.is_empty() {
-            return format!("{} {}", self.name, column_type_str);
-        }
-
-        let literal_str = match &self.literal {
-            Some(lit) => lit.clone(),
-            None => String::new(),
-        };
-
-        return format!("{} {}", self.name, literal_str);
+        Ok(format!("{} {} {}", self.name, column_type_str, options_str))
     }
 }
 
 impl fmt::Display for Column {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.build())
+        match self.build() {
+            Err(e) => write!(f, "{}", e),
+            Ok(s) => write!(f, "{}", s),
+        }
     }
 }
 
@@ -334,7 +324,11 @@ impl Select {
     }
 
     /// Builds and returns the SQL statement for the select query.
-    pub fn build(&self) -> String {
+    pub fn build(&self) -> Result<String, SqlBuilderError> {
+        if self.table.is_empty() {
+            return Err(SqlBuilderError::EmptyTableName);
+        }
+
         let mut statement = String::from("SELECT");
 
         if self.distinct {
@@ -366,13 +360,16 @@ impl Select {
         }
 
         statement.push(';');
-        statement
+        Ok(statement)
     }
 }
 
 impl fmt::Display for Select {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.build())
+        match self.build() {
+            Err(e) => write!(f, "{}", e),
+            Ok(s) => write!(f, "{}", s),
+        }
     }
 }
 
@@ -413,25 +410,44 @@ impl Insert {
     }
 
     /// Builds and returns the SQL statement for the `INSERT` query.
-    pub fn build(&self) -> String {
-        let columns: Vec<String> = self.values.iter().map(|(col, _)| col.clone()).collect();
-        let values: Vec<String> = self
-            .values
-            .iter()
-            .map(|(_, val)| format!("'{}'", val))
-            .collect();
+    pub fn build(&self) -> Result<String, SqlBuilderError> {
+        if self.table.is_empty() {
+            return Err(SqlBuilderError::EmptyTableName);
+        }
 
-        format!(
+        if self.values.is_empty() {
+            return Err(SqlBuilderError::EmptyColumnAndValue);
+        }
+
+        let mut columns: Vec<String> = vec![];
+        let mut values: Vec<String> = vec![];
+
+        for (col, val) in &self.values {
+            if col.is_empty() {
+                return Err(SqlBuilderError::EmptyColumnName);
+            }
+            if val.is_empty() {
+                return Err(SqlBuilderError::EmptyValue);
+            }
+
+            columns.push(col.clone());
+            values.push(format!("'{}'", val.clone()));
+        }
+
+        Ok(format!(
             "INSERT INTO {} ({}) VALUES ({});",
             self.table,
             columns.join(", "),
             values.join(", ")
-        )
+        ))
     }
 }
 
 impl fmt::Display for Insert {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.build())
+        match self.build() {
+            Err(e) => write!(f, "{}", e),
+            Ok(s) => write!(f, "{}", s),
+        }
     }
 }
