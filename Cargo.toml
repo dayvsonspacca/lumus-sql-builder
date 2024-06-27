@@ -1,6 +1,6 @@
 [package]
 name = "lumus-sql-builder"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 authors = ["Dayvson Spacca spacca.dayvson@gmail.com"]
 description = "Build sql statements programmatically and intuitively"
