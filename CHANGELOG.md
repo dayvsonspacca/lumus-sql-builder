@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 
 ### 🚀 Features
 
+- Add errors handling - ([29d22d9](https://github.com/lumus-team/lumus-sql-builder/commit/29d22d9a62badcd8b42910482f8144e66f9c0846))
 - Add insert builder for sqlite. - ([008a7ca](https://github.com/lumus-team/lumus-sql-builder/commit/008a7cad0f64bed1298dbffd75faaa55397ef489))
 - Add column literal. - ([218faeb](https://github.com/lumus-team/lumus-sql-builder/commit/218faeb30e3c00d41ca126080a8c781be466bd0d))
 - Add select for sqlite - ([7fe265a](https://github.com/lumus-team/lumus-sql-builder/commit/7fe265a49c8f6b33dd7acff7c5cbb5b67e76bb75))
@@ -46,6 +47,7 @@ All notable changes to this project will be documented in this file.
 
 ### 🐛 Bug Fixes
 
+- Adjust test and format - ([41b6ef6](https://github.com/lumus-team/lumus-sql-builder/commit/41b6ef6105c4dc9c83b69610ad1893d0269c488c))
 - Wrong license name. - ([76c5580](https://github.com/lumus-team/lumus-sql-builder/commit/76c55800a315ec44f486d9265e32051db0548969))
 - Offset only if have limit. - ([0375ba9](https://github.com/lumus-team/lumus-sql-builder/commit/0375ba92e6d6c95540ddc8924f87ca00b8b5789f))
 - Adjust order of build select string. - ([ebc1080](https://github.com/lumus-team/lumus-sql-builder/commit/ebc1080a3b3bfe9be69656536b83328e90079144))
@@ -71,6 +73,7 @@ All notable changes to this project will be documented in this file.
 
 ### 📚 Documentation
 
+- Update CHANGELOG - ([92b9e95](https://github.com/lumus-team/lumus-sql-builder/commit/92b9e952ebfad5e88919157ca3ba36f6a8e97aa6))
 - Update changelog - ([ff5427f](https://github.com/lumus-team/lumus-sql-builder/commit/ff5427f3940d7519e549d00bb555036dbcf69b9d))
 - Add examples + comments for sqlite module - ([eb98138](https://github.com/lumus-team/lumus-sql-builder/commit/eb981382a5c3af40adcd63f42c0c780c2cc8ede0))
 - Update CHANGELOG. - ([6db1c37](https://github.com/lumus-team/lumus-sql-builder/commit/6db1c3726376e27796bb9f3fb65f530ee7e8f737))
@@ -93,6 +96,7 @@ All notable changes to this project will be documented in this file.
 
 ### 🧪 Testing
 
+- Simplifying tests - ([381e90a](https://github.com/lumus-team/lumus-sql-builder/commit/381e90a28dcfc38adfe9e8fdc577b8f4213d1707))
 - Insert and select tests for sqlite. - ([161b46a](https://github.com/lumus-team/lumus-sql-builder/commit/161b46ac60ecef0d7846b3b3e4b8c95e441a0ba4))
 - Combine sqlite tests - ([d44dbe5](https://github.com/lumus-team/lumus-sql-builder/commit/d44dbe57b8265e9b8c073aa3f1a29e1f22e6f762))
 - Start new test format - ([089fc8e](https://github.com/lumus-team/lumus-sql-builder/commit/089fc8ea7e3ad7de52bba68c58e5306112f9b5f9))
