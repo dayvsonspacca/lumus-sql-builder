@@ -1,4 +1,4 @@
-use lumus_sql_builder::sqlite::{Column, CreateTable, Insert, Select};
+use lumus_sql_builder::sqlite::{Column, CreateTable, Insert, Select, Where};
 use sqlite::{Connection, State};
 
 #[test]
@@ -50,6 +50,59 @@ fn insert_and_select_test() {
         );
         assert_eq!(statement.read::<i64, _>("age").unwrap(), 21);
     }
+}
+
+#[test]
+fn test_select_where() {
+    let create = create_test_table_schema();
+    let conn = Connection::open(":memory:").unwrap();
+    conn.execute(create).unwrap();
+
+    conn.execute(
+        Insert::new("test_table")
+            .values(vec![
+                ("name", "Dayvson Spacca"),
+                ("email", "spacca.dayvson@gmail.com"),
+                ("age", "21"),
+            ])
+            .build()
+            .unwrap(),
+    )
+    .unwrap();
+
+    conn.execute(
+        Insert::new("test_table")
+            .values(vec![
+                ("name", "John doe"),
+                ("email", "Jhondoe@doe.com"),
+                ("age", "42"),
+            ])
+            .build()
+            .unwrap(),
+    )
+    .unwrap();
+
+    let condition = Where::new()
+        .equal_to("name", "John doe")
+        .and()
+        .not_equal_to("age", "21")
+        .or()
+        .is_not_null("email")
+        .build();
+
+    let select = Select::new("test_table")
+        .condition(condition)
+        .build()
+        .unwrap();
+
+    assert_eq!(
+        "SELECT * FROM test_table WHERE name = 'John doe' AND age != '21' OR email IS NOT NULL;",
+        select
+    );
+
+    let statement = conn.prepare(select).unwrap().iter().count();
+
+    assert_eq!(statement, 2);
 }
 
 fn create_test_table_schema() -> String {

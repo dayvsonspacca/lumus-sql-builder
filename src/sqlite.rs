@@ -261,6 +261,7 @@ impl fmt::Display for Column {
 pub struct Select {
     table: String,
     distinct: bool,
+    condition: Option<String>,
     columns: Option<String>,
     group: Option<String>,
     order: Option<String>,
@@ -280,6 +281,7 @@ impl Select {
             table: table.into(),
             distinct: false,
             columns: None,
+            condition: None,
             group: None,
             order: None,
             limit: None,
@@ -308,6 +310,12 @@ impl Select {
     /// Specifies the ordering for the query results.
     pub fn order<T: Into<String>>(&mut self, order: T) -> &mut Self {
         self.order = Some(order.into());
+        self
+    }
+
+    /// Specifies where for `Update`, `Delete` and `Select`.
+    pub fn condition(&mut self, condition: String) -> &mut Self {
+        self.condition = Some(condition);
         self
     }
 
@@ -342,6 +350,10 @@ impl Select {
         }
 
         statement.push_str(&format!(" FROM {}", self.table));
+
+        if let Some(condition) = &self.condition {
+            statement.push_str(&format!(" WHERE {}", condition));
+        }
 
         if let Some(group) = &self.group {
             statement.push_str(&format!(" GROUP BY {}", group));
@@ -449,5 +461,128 @@ impl fmt::Display for Insert {
             Err(e) => write!(f, "{}", e),
             Ok(s) => write!(f, "{}", s),
         }
+    }
+}
+
+pub struct Where {
+    statement: String,
+}
+
+impl Where {
+    pub fn new() -> Self {
+        Self {
+            statement: String::new(),
+        }
+    }
+
+    pub fn from(statement: &str) -> Self {
+        Self {
+            statement: statement.to_string(),
+        }
+    }
+
+    pub fn equal_to(&mut self, field: &str, value: &str) -> &mut Self {
+        self.add_predicate(field, "=", value).unwrap()
+    }
+
+    pub fn not_equal_to(&mut self, field: &str, value: &str) -> &mut Self {
+        self.add_predicate(field, "!=", value).unwrap()
+    }
+
+    pub fn greater_than(&mut self, field: &str, value: &str) -> &mut Self {
+        self.add_predicate(field, ">", value).unwrap()
+    }
+
+    pub fn greater_than_equal(&mut self, field: &str, value: &str) -> &mut Self {
+        self.add_predicate(field, ">=", value).unwrap()
+    }
+
+    pub fn less_than(&mut self, field: &str, value: &str) -> &mut Self {
+        self.add_predicate(field, "<", value).unwrap()
+    }
+
+    pub fn less_than_equal(
+        &mut self,
+        field: &str,
+        value: &str,
+    ) -> Result<&mut Self, SqlBuilderError> {
+        self.add_predicate(field, "<=", value)
+    }
+
+    pub fn is_null(&mut self, field: &str) -> &mut Self {
+        self.add_predicate(field, "IS NULL", "").unwrap()
+    }
+
+    pub fn is_not_null(&mut self, field: &str) -> &mut Self {
+        self.add_predicate(field, "IS NOT NULL", "").unwrap()
+    }
+
+    pub fn inside(&mut self, field: &str, fields: Vec<&str>) -> &mut Self {
+        self.add_predicate(field, "IN", &format!("({})", fields.join(", ")))
+            .unwrap()
+    }
+
+    pub fn not_inside(&mut self, field: &str, fields: Vec<&str>) -> &mut Self {
+        self.add_predicate(field, "NOT IN", &format!("({})", fields.join(", ")))
+            .unwrap()
+    }
+
+    pub fn like(&mut self, field: &str, value: &str) -> &mut Self {
+        self.add_predicate(field, "LIKE", value).unwrap()
+    }
+
+    pub fn not_like(&mut self, field: &str, value: &str) -> &mut Self {
+        self.add_predicate(field, "NOT LIKE", value).unwrap()
+    }
+
+    pub fn and(&mut self) -> &mut Self {
+        self.statement.push_str("AND ");
+        self
+    }
+
+    pub fn or(&mut self) -> &mut Self {
+        self.statement.push_str("OR ");
+        self
+    }
+
+    pub fn nest(&mut self) -> &mut Self {
+        self.statement.push('(');
+        self
+    }
+
+    pub fn unnest(&mut self) -> &mut Self {
+        self.statement.push(')');
+        self
+    }
+
+    pub fn build(&self) -> String {
+        self.statement.trim().to_string()
+    }
+
+    fn add_predicate(
+        &mut self,
+        field: &str,
+        predicate: &str,
+        value: &str,
+    ) -> Result<&mut Self, SqlBuilderError> {
+        if field.is_empty() {
+            return Err(SqlBuilderError::EmptyColumnName);
+        }
+
+        if predicate == "IS NULL" || predicate == "IS NOT NULL" {
+            self.statement
+                .push_str(&format!("{} {} ", field, predicate));
+            return Ok(self);
+        }
+
+        if value.is_empty() {
+            return Err(SqlBuilderError::EmptyValue);
+        }
+
+        let escaped_value = format!("'{}'", value);
+
+        self.statement
+            .push_str(&format!("{} {} {} ", field, predicate, escaped_value));
+        Ok(self)
     }
 }

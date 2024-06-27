@@ -19,7 +19,7 @@ impl fmt::Display for SqlBuilderError {
                 f,
                 "The column and the value to be inserted cannot be empty."
             ),
-            SqlBuilderError::EmptyValue => write!(f, "The value to be inserted cannot be empty."),
+            SqlBuilderError::EmptyValue => write!(f, "The value cannot be empty."),
             SqlBuilderError::NoColumnsSpecified => write!(f, "No columns specified for table."),
             SqlBuilderError::InvalidColumnType => {
                 write!(f, "The specified column type is invalid.")
