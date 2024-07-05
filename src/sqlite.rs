@@ -633,7 +633,7 @@ impl Where {
         let escaped_value = format!("'{}'", value);
 
         self.statement
-            .push_str(&format!("{} {} {} ", field, predicate, escaped_value));
+            .push_str(&format!("{} {} {}", field, predicate, escaped_value));
         Ok(self)
     }
 }
