@@ -249,6 +249,7 @@ impl Column {
     }
 }
 
+/// Implementation of the Display trait for `Column`, allowing it to be printed.
 impl fmt::Display for Column {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.build() {
@@ -455,6 +456,7 @@ impl Insert {
     }
 }
 
+/// Implementation of the Display trait for `Insert`, allowing it to be printed.
 impl fmt::Display for Insert {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.build() {
@@ -470,6 +472,15 @@ pub struct Where {
 
 impl Where {
     /// Creates a new `Where` instance with an empty statement.
+    /// # Example
+    /// ```
+    /// use lumus_sql_builder::sqlite::Where;
+    ///
+    /// let mut condition = Where::new();
+    /// condition.equal_to("name", "Dayvson Spacca");
+    ///
+    /// assert_eq!(condition.build(), "name = 'Dayvson Spacca'")
+    /// ```
     pub fn new() -> Self {
         Self {
             statement: String::new(),
@@ -477,6 +488,15 @@ impl Where {
     }
 
     /// Creates a new `Where` instance with a specified initial statement.
+    /// # Example
+    /// ```
+    /// use lumus_sql_builder::sqlite::Where;
+    ///
+    /// let mut condition = Where::from("name = 'Dayvson Spacca'");
+    /// condition.and().greater_than("age", "21");
+    ///
+    /// assert_eq!(condition.build(), "name = 'Dayvson Spacca' AND age > '21'");
+    /// ```
     pub fn from(statement: &str) -> Self {
         Self {
             statement: statement.to_string(),
@@ -562,13 +582,13 @@ impl Where {
 
     /// Appends `AND` to the current statement in the WHERE clause.
     pub fn and(&mut self) -> &mut Self {
-        self.statement.push_str("AND ");
+        self.statement.push_str(" AND ");
         self
     }
 
     /// Appends `OR` to the current statement in the WHERE clause.
     pub fn or(&mut self) -> &mut Self {
-        self.statement.push_str("OR ");
+        self.statement.push_str(" OR ");
         self
     }
 
