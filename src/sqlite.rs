@@ -644,3 +644,53 @@ impl fmt::Display for Where {
         write!(f, "{}", self.build())
     }
 }
+
+pub struct Update {
+    table: String,
+    pub set: Vec<(String, String)>,
+    condition: Option<String>,
+}
+
+impl Update {
+    pub fn new<T: Into<String>>(table: T) -> Self {
+        Update {
+            table: table.try_into().unwrap(),
+            set: Vec::new(),
+            condition: None,
+        }
+    }
+
+    pub fn build(self) -> Result<String, SqlBuilderError> {
+        if self.table.is_empty() {
+            return Err(SqlBuilderError::EmptyTableName);
+        }
+
+        if self.set.is_empty() {
+            return Err(SqlBuilderError::EmptyColumnAndValue);
+        }
+
+        let mut sets: Vec<String> = vec![];
+
+        for (col, val) in &self.set {
+            if col.is_empty() {
+                return Err(SqlBuilderError::EmptyColumnName);
+            }
+            if val.is_empty() {
+                return Err(SqlBuilderError::EmptyValue);
+            }
+
+            sets.push(format!("{} = '{}'", col.clone(), val.clone()));
+        }
+
+        if let Some(condition) = self.condition {
+            return Ok(format!(
+                "UPDATE {} SET {} WHERE {};",
+                self.table,
+                sets.join(", "),
+                condition
+            ));
+        }
+
+        Ok(format!("UPDATE {} SET {};", self.table, sets.join(", "),))
+    }
+}
