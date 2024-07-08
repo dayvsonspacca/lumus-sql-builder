@@ -645,6 +645,7 @@ impl fmt::Display for Where {
     }
 }
 
+/// Represents a ´UPDATE´ clause builder for SQL queries
 pub struct Update {
     table: String,
     pub set: Vec<(String, String)>,
@@ -652,6 +653,17 @@ pub struct Update {
 }
 
 impl Update {
+    /// Creates a new `Update` instance with the given table name.
+    /// # Example
+    /// ```
+    /// use lumus_sql_builder::sqlite::Update;
+    ///
+    /// let update = Update::new("users_tb").set(vec![
+    ///     ("name", "João")
+    /// ]).build();
+    ///
+    /// assert_eq!("UPDATE users_tb SET name = 'João';", update.unwrap());
+    /// ```
     pub fn new<T: Into<String>>(table: T) -> Self {
         Update {
             table: table.try_into().unwrap(),
@@ -660,7 +672,16 @@ impl Update {
         }
     }
 
-    pub fn build(self) -> Result<String, SqlBuilderError> {
+    /// Sets the values to be updated.
+    pub fn set<T: ToString>(mut self, set: Vec<(&str, T)>) -> Self {
+        self.set = set
+            .into_iter()
+            .map(|(col, val)| (col.to_string(), val.to_string()))
+            .collect();
+        self
+    }
+
+    pub fn build(&self) -> Result<String, SqlBuilderError> {
         if self.table.is_empty() {
             return Err(SqlBuilderError::EmptyTableName);
         }
@@ -682,7 +703,7 @@ impl Update {
             sets.push(format!("{} = '{}'", col.clone(), val.clone()));
         }
 
-        if let Some(condition) = self.condition {
+        if let Some(condition) = &self.condition {
             return Ok(format!(
                 "UPDATE {} SET {} WHERE {};",
                 self.table,
@@ -692,5 +713,15 @@ impl Update {
         }
 
         Ok(format!("UPDATE {} SET {};", self.table, sets.join(", "),))
+    }
+}
+
+/// Implementation of the Display trait for `Update`, allowing it to be printed.
+impl fmt::Display for Update {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self.build() {
+            Err(e) => write!(f, "{}", e),
+            Ok(s) => write!(f, "{}", s),
+        }
     }
 }
