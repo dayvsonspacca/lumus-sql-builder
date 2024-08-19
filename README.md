@@ -2,14 +2,14 @@
 
 ## About project
 
-Lumus SQL Builder is a Rust library that allows you to programmatically and intuitively construct complex SQL queries. It supports a variety of SQL operations, including column selection, joins, WHERE clauses, grouping, sorting, and more.
+Lumus SQL Builder is a Rust library that allows you to programmatically and intuitively construct complex SQL queries for simple projects. It supports a variety of SQL operations, including column selection, joins, WHERE clauses, grouping, sorting, and more.
 
 ## Features
 
 -   Table creation
 -   Data insertion
 -   Data selection with support for DISTINCT, GROUP BY, ORDER BY, LIMIT, and OFFSET
--   Complex WHERE clauses
+-   A simple way to make WHERE clauses
 
 ## Example Usage
 
