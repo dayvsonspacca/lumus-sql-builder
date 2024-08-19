@@ -2,6 +2,7 @@ use crate::errors::SqlBuilderError;
 use core::fmt;
 
 /// Represents the creation of a table with specified columns and options.
+#[derive(Debug)]
 pub struct CreateTable {
     table: String,
     columns: Vec<Column>,
@@ -120,6 +121,7 @@ impl fmt::Display for ColumnOption {
         }
     }
 }
+
 /// Represents a table column with a name, data type, and options.
 #[derive(Debug)]
 pub struct Column {
@@ -259,6 +261,8 @@ impl fmt::Display for Column {
     }
 }
 
+/// Represents the creation of a SELECT with specified table and options.
+#[derive(Debug)]
 pub struct Select {
     table: String,
     distinct: bool,
@@ -288,6 +292,75 @@ impl Select {
             limit: None,
             offset: None,
         }
+    }
+
+    /// Creates a new `Select` instance from a SQL query string.
+    /// The query string should be in the format "SELECT * FROM table_name [WHERE condition] [GROUP BY column] [ORDER BY column] [LIMIT limit] [OFFSET offset]".
+    /// # Example
+    /// ```
+    /// use lumus_sql_builder::sqlite::Select;
+    /// let query = "SELECT * FROM users WHERE age > 18 GROUP BY city ORDER BY name LIMIT 10 OFFSET 0";
+    /// Select::from(query);
+    /// ```
+    pub fn from(query: &str) -> Result<Select, SqlBuilderError> {
+        let mut parts = query.split_whitespace();
+        let select = parts.next().ok_or(SqlBuilderError::InvalidQuery)?;
+        if select.to_uppercase() != "SELECT" {
+            return Err(SqlBuilderError::InvalidQuery);
+        }
+
+        let _ = parts.next().ok_or(SqlBuilderError::InvalidQuery)?; // Skip the "*"
+
+        let from = parts.next().ok_or(SqlBuilderError::InvalidQuery)?;
+        if from.to_uppercase() != "FROM" {
+            return Err(SqlBuilderError::InvalidQuery);
+        }
+
+        let table = parts.next().ok_or(SqlBuilderError::InvalidQuery)?;
+
+        let mut select_builder = Select::new(table);
+
+        while let Some(part) = parts.next() {
+            match part.to_uppercase().as_str() {
+                "WHERE" => {
+                    let condition = parts.next().ok_or(SqlBuilderError::InvalidQuery)?;
+                    select_builder.condition(condition.to_string());
+                }
+                "GROUP" => {
+                    let by = parts.next().ok_or(SqlBuilderError::InvalidQuery)?;
+                    if by.to_uppercase() != "BY" {
+                        return Err(SqlBuilderError::InvalidQuery);
+                    }
+                    let group = parts.next().ok_or(SqlBuilderError::InvalidQuery)?;
+                    select_builder.group(group.to_string());
+                }
+                "ORDER" => {
+                    let by = parts.next().ok_or(SqlBuilderError::InvalidQuery)?;
+                    if by.to_uppercase() != "BY" {
+                        return Err(SqlBuilderError::InvalidQuery);
+                    }
+                    let order = parts.next().ok_or(SqlBuilderError::InvalidQuery)?;
+                    select_builder.order(order.to_string());
+                }
+                "LIMIT" => {
+                    let limit = parts.next().ok_or(SqlBuilderError::InvalidQuery)?;
+                    let limit = limit
+                        .parse::<u32>()
+                        .map_err(|_| SqlBuilderError::InvalidQuery)?;
+                    select_builder.limit(limit);
+                }
+                "OFFSET" => {
+                    let offset = parts.next().ok_or(SqlBuilderError::InvalidQuery)?;
+                    let offset = offset
+                        .parse::<u32>()
+                        .map_err(|_| SqlBuilderError::InvalidQuery)?;
+                    select_builder.offset(offset);
+                }
+                _ => return Err(SqlBuilderError::InvalidQuery),
+            }
+        }
+
+        Ok(select_builder)
     }
 
     /// Specifies that the select statement should return distinct rows.
@@ -377,6 +450,7 @@ impl Select {
     }
 }
 
+/// Implementation of the Display trait for `Select`, allowing it to be printed.
 impl fmt::Display for Select {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.build() {
@@ -386,6 +460,8 @@ impl fmt::Display for Select {
     }
 }
 
+/// Represents the creation of a INSERT with specified table and values.
+#[derive(Debug)]
 pub struct Insert {
     pub table: String,
     pub values: Vec<(String, String)>,
@@ -466,6 +542,7 @@ impl fmt::Display for Insert {
     }
 }
 /// Represents a WHERE clause builder for SQL queries.
+#[derive(Debug)]
 pub struct Where {
     statement: String,
 }
@@ -646,6 +723,7 @@ impl fmt::Display for Where {
 }
 
 /// Represents a ´UPDATE´ clause builder for SQL queries
+#[derive(Debug)]
 pub struct Update {
     table: String,
     pub set: Vec<(String, String)>,

@@ -8,6 +8,7 @@ pub enum SqlBuilderError {
     EmptyValue,
     NoColumnsSpecified,
     InvalidColumnType,
+    InvalidQuery,
 }
 
 impl fmt::Display for SqlBuilderError {
@@ -24,6 +25,7 @@ impl fmt::Display for SqlBuilderError {
             SqlBuilderError::InvalidColumnType => {
                 write!(f, "The specified column type is invalid.")
             }
+            SqlBuilderError::InvalidQuery => write!(f, "The query is invalid."),
         }
     }
 }
