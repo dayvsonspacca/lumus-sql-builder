@@ -18,9 +18,9 @@ impl CreateTable {
     ///     Column::new("name").text().not_null().primary_key(),
     /// ]);
     /// ```
-    pub fn new<T: Into<String>>(table: T, columns: Vec<Column>) -> CreateTable {
+    pub fn new(table: &str, columns: Vec<Column>) -> CreateTable {
         CreateTable {
-            table: table.into(),
+            table: table.to_string(),
             columns,
             if_not_exists: false,
         }
@@ -281,9 +281,9 @@ impl Select {
     /// use lumus_sql_builder::sqlite::Select;
     /// Select::new("users").columns("name, age");
     /// ```
-    pub fn new<T: Into<String>>(table: T) -> Select {
+    pub fn new(table: &str) -> Select {
         Select {
-            table: table.into(),
+            table: table.to_string(),
             distinct: false,
             columns: None,
             condition: None,
@@ -332,7 +332,7 @@ impl Select {
                         return Err(SqlBuilderError::InvalidQuery);
                     }
                     let group = parts.next().ok_or(SqlBuilderError::InvalidQuery)?;
-                    select_builder.group(group.to_string());
+                    select_builder.group(group);
                 }
                 "ORDER" => {
                     let by = parts.next().ok_or(SqlBuilderError::InvalidQuery)?;
@@ -340,7 +340,7 @@ impl Select {
                         return Err(SqlBuilderError::InvalidQuery);
                     }
                     let order = parts.next().ok_or(SqlBuilderError::InvalidQuery)?;
-                    select_builder.order(order.to_string());
+                    select_builder.order(order);
                 }
                 "LIMIT" => {
                     let limit = parts.next().ok_or(SqlBuilderError::InvalidQuery)?;
@@ -370,20 +370,20 @@ impl Select {
     }
 
     /// Specifies the columns to be selected in the query.
-    pub fn columns<T: Into<String>>(&mut self, columns: T) -> &mut Self {
-        self.columns = Some(columns.into());
+    pub fn columns(&mut self, columns: &str) -> &mut Self {
+        self.columns = Some(columns.to_string());
         self
     }
 
     /// Specifies the grouping for the query results.
-    pub fn group<T: Into<String>>(&mut self, group: T) -> &mut Self {
-        self.group = Some(group.into());
+    pub fn group(&mut self, group: &str) -> &mut Self {
+        self.group = Some(group.to_string());
         self
     }
 
     /// Specifies the ordering for the query results.
-    pub fn order<T: Into<String>>(&mut self, order: T) -> &mut Self {
-        self.order = Some(order.into());
+    pub fn order(&mut self, order: &str) -> &mut Self {
+        self.order = Some(order.to_string());
         self
     }
 
@@ -482,9 +482,9 @@ impl Insert {
     ///     ("manager_id", "1"),
     /// ]);
     /// ```
-    pub fn new<T: Into<String>>(table: T) -> Insert {
+    pub fn new(table: &str) -> Insert {
         Insert {
-            table: table.into(),
+            table: table.to_string(),
             values: Vec::new(),
         }
     }
@@ -742,9 +742,9 @@ impl Update {
     ///
     /// assert_eq!("UPDATE users_tb SET name = 'João';", update.unwrap());
     /// ```
-    pub fn new<T: Into<String>>(table: T) -> Self {
+    pub fn new(table: &str) -> Self {
         Update {
-            table: table.try_into().unwrap(),
+            table: table.to_string(),
             set: Vec::new(),
             condition: None,
         }
