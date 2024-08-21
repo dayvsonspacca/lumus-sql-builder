@@ -387,7 +387,7 @@ impl Select {
         self
     }
 
-    /// Specifies where for `Update`, `Delete` and `Select`.
+    /// Specifies where for `Select`.
     pub fn condition(&mut self, condition: String) -> &mut Self {
         self.condition = Some(condition);
         self
@@ -756,6 +756,12 @@ impl Update {
             .into_iter()
             .map(|(col, val)| (col.to_string(), val.to_string()))
             .collect();
+        self
+    }
+
+    /// Specifies where for `Update`.
+    pub fn condition(&mut self, condition: String) -> &mut Self {
+        self.condition = Some(condition);
         self
     }
 
