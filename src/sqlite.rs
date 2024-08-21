@@ -18,8 +18,8 @@ impl CreateTable {
     ///     Column::new("name").text().not_null().primary_key(),
     /// ]);
     /// ```
-    pub fn new(table: &str, columns: Vec<Column>) -> CreateTable {
-        CreateTable {
+    pub fn new(table: &str, columns: Vec<Column>) -> Self {
+        Self {
             table: table.to_string(),
             columns,
             if_not_exists: false,
@@ -137,7 +137,7 @@ impl Column {
     /// use lumus_sql_builder::sqlite::Column;
     /// Column::new("name").text().not_null();
     /// ```
-    pub fn new(name: &str) -> Column {
+    pub fn new(name: &str) -> Self {
         Self {
             name: name.to_string(),
             column_type: None,
@@ -281,8 +281,8 @@ impl Select {
     /// use lumus_sql_builder::sqlite::Select;
     /// Select::new("users").columns("name, age");
     /// ```
-    pub fn new(table: &str) -> Select {
-        Select {
+    pub fn new(table: &str) -> Self {
+        Self {
             table: table.to_string(),
             distinct: false,
             columns: None,
@@ -734,16 +734,20 @@ impl Update {
     /// Creates a new `Update` instance with the given table name.
     /// # Example
     /// ```
-    /// use lumus_sql_builder::sqlite::Update;
+    /// use lumus_sql_builder::sqlite::{Update, Where};
+    ///
+    /// let mut condition = Where::new();
+    /// condition.equal_to("age", "21");
     ///
     /// let update = Update::new("users_tb").set(vec![
     ///     ("name", "João")
-    /// ]).build();
+    /// ]).condition(condition.build())
+    /// .build();
     ///
-    /// assert_eq!("UPDATE users_tb SET name = 'João';", update.unwrap());
+    /// assert_eq!("UPDATE users_tb SET name = 'João' WHERE age = '21';", update.unwrap());
     /// ```
     pub fn new(table: &str) -> Self {
-        Update {
+        Self {
             table: table.to_string(),
             set: Vec::new(),
             condition: None,
@@ -802,6 +806,59 @@ impl Update {
 
 /// Implementation of the Display trait for `Update`, allowing it to be printed.
 impl fmt::Display for Update {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self.build() {
+            Err(e) => write!(f, "{}", e),
+            Ok(s) => write!(f, "{}", s),
+        }
+    }
+}
+
+/// Represents a ´DELETE´ clause builder for SQL queries
+#[derive(Debug)]
+pub struct Delete {
+    table: String,
+    condition: Option<String>,
+}
+
+impl Delete {
+    /// Creates a new `Delete` instance with the given table name.
+    /// # Example
+    /// ```
+    /// use lumus_sql_builder::sqlite::Delete;
+    ///
+    /// let delete = Delete::new("users_tb").build();
+    ///
+    /// assert_eq!("DELETE FROM users_tb;", delete.unwrap());
+    /// ```
+    pub fn new(table: &str) -> Self {
+        Self {
+            table: table.to_string(),
+            condition: None,
+        }
+    }
+
+    /// Specifies where for `Delete`.
+    pub fn condition(&mut self, condition: String) -> &mut Self {
+        self.condition = Some(condition);
+        self
+    }
+
+    pub fn build(&self) -> Result<String, SqlBuilderError> {
+        if self.table.is_empty() {
+            return Err(SqlBuilderError::EmptyTableName);
+        }
+
+        if let Some(condition) = &self.condition {
+            return Ok(format!("DELETE FROM {} WHERE {};", self.table, condition));
+        }
+
+        Ok(format!("DELETE FROM {};", self.table))
+    }
+}
+
+/// Implementation of the Display trait for `Delete`, allowing it to be printed.
+impl fmt::Display for Delete {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.build() {
             Err(e) => write!(f, "{}", e),
