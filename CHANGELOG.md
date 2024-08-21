@@ -5,9 +5,9 @@ All notable changes to this project will be documented in this file.
 
 ### 📢 Releases
 
+- 0.1.6 - ([075e4ec](https://github.com/lumus-team/lumus-sql-builder/commit/075e4ecefb66f141e992487aeb183721a72eaa54))
 - 0.1.5 - ([a60f7c6](https://github.com/lumus-team/lumus-sql-builder/commit/a60f7c638ca0ea5c9d9eaad67f396859eae189fd))
 - 0.1.4 - ([dacb231](https://github.com/lumus-team/lumus-sql-builder/commit/dacb2317affc283648f20ce863b7400a4a9ed51f))
-- 0.1.3 - ([313c740](https://github.com/lumus-team/lumus-sql-builder/commit/313c740e12decd54f69f3f59f4e8bfe2c362850d))
 
 ### 🚀 Features
 
