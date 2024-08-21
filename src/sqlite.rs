@@ -482,8 +482,8 @@ impl Insert {
     ///     ("manager_id", "1"),
     /// ]);
     /// ```
-    pub fn new(table: &str) -> Insert {
-        Insert {
+    pub fn new(table: &str) -> Self {
+        Self {
             table: table.to_string(),
             values: Vec::new(),
         }
@@ -611,12 +611,9 @@ impl Where {
     }
 
     /// Adds a less than or equal condition (`field <= value`) to the WHERE clause.
-    pub fn less_than_equal(
-        &mut self,
-        field: &str,
-        value: &str,
-    ) -> Result<&mut Self, SqlBuilderError> {
-        self.add_predicate(field, "<=", value)
+    pub fn less_than_equal(&mut self, field: &str, value: &str) -> &mut Self {
+        self.add_predicate(field, "<=", value).unwrap();
+        self
     }
 
     /// Adds a `IS NULL` condition (`field IS NULL`) to the WHERE clause.
