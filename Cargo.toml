@@ -17,4 +17,3 @@ name = "lumus_sql_builder"
 [dependencies]
 
 [dev-dependencies]
-sqlite = "0.34.0"

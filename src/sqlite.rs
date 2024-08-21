@@ -1,4 +1,4 @@
-use crate::errors::SqlBuilderError;
+use crate::{errors::SqlBuilderError, escape_value};
 use core::fmt;
 
 /// Represents the creation of a table with specified columns and options.
@@ -135,7 +135,9 @@ impl Column {
     /// # Example
     /// ```
     /// use lumus_sql_builder::sqlite::Column;
-    /// Column::new("name").text().not_null();
+    /// let col = Column::new("name").text().not_null();
+    ///
+    /// assert_eq!(col.build().unwrap(), "name TEXT NOT NULL");
     /// ```
     pub fn new(name: &str) -> Self {
         Self {
@@ -582,37 +584,43 @@ impl Where {
 
     /// Adds an equality condition (`field = value`) to the WHERE clause.
     pub fn equal_to(&mut self, field: &str, value: &str) -> &mut Self {
-        self.add_predicate(field, "=", value).unwrap();
+        self.add_predicate(field, "=", escape_value(value).as_str())
+            .unwrap();
         self
     }
 
     /// Adds a not equal condition (`field != value`) to the WHERE clause.
     pub fn not_equal_to(&mut self, field: &str, value: &str) -> &mut Self {
-        self.add_predicate(field, "!=", value).unwrap();
+        self.add_predicate(field, "!=", escape_value(value).as_str())
+            .unwrap();
         self
     }
 
     /// Adds a greater than condition (`field > value`) to the WHERE clause.
     pub fn greater_than(&mut self, field: &str, value: &str) -> &mut Self {
-        self.add_predicate(field, ">", value).unwrap();
+        self.add_predicate(field, ">", escape_value(value).as_str())
+            .unwrap();
         self
     }
 
     /// Adds a greater than or equal condition (`field >= value`) to the WHERE clause.
     pub fn greater_than_equal(&mut self, field: &str, value: &str) -> &mut Self {
-        self.add_predicate(field, ">=", value).unwrap();
+        self.add_predicate(field, ">=", escape_value(value).as_str())
+            .unwrap();
         self
     }
 
     /// Adds a less than condition (`field < value`) to the WHERE clause.
     pub fn less_than(&mut self, field: &str, value: &str) -> &mut Self {
-        self.add_predicate(field, "<", value).unwrap();
+        self.add_predicate(field, "<", escape_value(value).as_str())
+            .unwrap();
         self
     }
 
     /// Adds a less than or equal condition (`field <= value`) to the WHERE clause.
     pub fn less_than_equal(&mut self, field: &str, value: &str) -> &mut Self {
-        self.add_predicate(field, "<=", value).unwrap();
+        self.add_predicate(field, "<=", escape_value(value).as_str())
+            .unwrap();
         self
     }
 
@@ -630,27 +638,51 @@ impl Where {
 
     /// Adds an `IN` condition (`field IN (values)`) to the WHERE clause.
     pub fn inside(&mut self, field: &str, values: Vec<&str>) -> &mut Self {
-        self.add_predicate(field, "IN", &format!("({})", values.join(", ")))
-            .unwrap();
+        self.add_predicate(
+            field,
+            "IN",
+            &format!(
+                "({})",
+                values
+                    .iter()
+                    .map(|v| escape_value(v))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            ),
+        )
+        .unwrap();
         self
     }
 
     /// Adds a `NOT IN` condition (`field NOT IN (values)`) to the WHERE clause.
     pub fn not_inside(&mut self, field: &str, values: Vec<&str>) -> &mut Self {
-        self.add_predicate(field, "NOT IN", &format!("({})", values.join(", ")))
-            .unwrap();
+        self.add_predicate(
+            field,
+            "NOT IN",
+            &format!(
+                "({})",
+                values
+                    .iter()
+                    .map(|v| escape_value(v))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            ),
+        )
+        .unwrap();
         self
     }
 
     /// Adds a `LIKE` condition (`field LIKE value`) to the WHERE clause.
     pub fn like(&mut self, field: &str, value: &str) -> &mut Self {
-        self.add_predicate(field, "LIKE", value).unwrap();
+        self.add_predicate(field, "LIKE", escape_value(value).as_str())
+            .unwrap();
         self
     }
 
     /// Adds a `NOT LIKE` condition (`field NOT LIKE value`) to the WHERE clause.
     pub fn not_like(&mut self, field: &str, value: &str) -> &mut Self {
-        self.add_predicate(field, "NOT LIKE", value).unwrap();
+        self.add_predicate(field, "NOT LIKE", escape_value(value).as_str())
+            .unwrap();
         self
     }
 
@@ -695,8 +727,7 @@ impl Where {
         }
 
         if predicate == "IS NULL" || predicate == "IS NOT NULL" {
-            self.statement
-                .push_str(&format!("{} {} ", field, predicate));
+            self.statement.push_str(&format!("{} {}", field, predicate));
             return Ok(self);
         }
 
@@ -704,10 +735,8 @@ impl Where {
             return Err(SqlBuilderError::EmptyValue);
         }
 
-        let escaped_value = format!("'{}'", value);
-
         self.statement
-            .push_str(&format!("{} {} {}", field, predicate, escaped_value));
+            .push_str(&format!("{} {} {}", field, predicate, value));
         Ok(self)
     }
 }
@@ -847,6 +876,9 @@ impl Delete {
         }
 
         if let Some(condition) = &self.condition {
+            if condition.is_empty() {
+                return Err(SqlBuilderError::EmptyCondition);
+            }
             return Ok(format!("DELETE FROM {} WHERE {};", self.table, condition));
         }
 
