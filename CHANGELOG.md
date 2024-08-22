@@ -7,40 +7,37 @@ All notable changes to this project will be documented in this file.
 
 - 0.1.6 - ([075e4ec](https://github.com/lumus-team/lumus-sql-builder/commit/075e4ecefb66f141e992487aeb183721a72eaa54))
 - 0.1.5 - ([a60f7c6](https://github.com/lumus-team/lumus-sql-builder/commit/a60f7c638ca0ea5c9d9eaad67f396859eae189fd))
-- 0.1.4 - ([dacb231](https://github.com/lumus-team/lumus-sql-builder/commit/dacb2317affc283648f20ce863b7400a4a9ed51f))
 
 ### 🚀 Features
 
+- Add Join statements - ([c466c4d](https://github.com/lumus-team/lumus-sql-builder/commit/c466c4d02cb2728dbe8d769ccac2cdb37c3edd22))
 - Add Delete + organizing fn returns - ([77de2e1](https://github.com/lumus-team/lumus-sql-builder/commit/77de2e1965b05e7df373c693a554f2a9a341c179))
 - Add where to Update - ([c5925d3](https://github.com/lumus-team/lumus-sql-builder/commit/c5925d340bfa86133a79a960d98c3425c0973afc))
 - Refactor SQLite module to accept table names as string references - ([52d5c94](https://github.com/lumus-team/lumus-sql-builder/commit/52d5c943591cc72968a12083dd6c19bf04d944a3))
 - Add docs + update set - ([e224b4d](https://github.com/lumus-team/lumus-sql-builder/commit/e224b4d1f4eaac9cf8fa8cbb06cd877d82d84cf8))
 - Start Update - ([ec2dd37](https://github.com/lumus-team/lumus-sql-builder/commit/ec2dd3741a5f2d7c1211c0e0300eee4ccec4e07e))
 - Add where - ([1e1bbcc](https://github.com/lumus-team/lumus-sql-builder/commit/1e1bbcc24268a6fd0fac050b70d476bf780c3e1d))
-- Add errors handling - ([29d22d9](https://github.com/lumus-team/lumus-sql-builder/commit/29d22d9a62badcd8b42910482f8144e66f9c0846))
-
-### 🐛 Bug Fixes
-
-- Adjust test and format - ([41b6ef6](https://github.com/lumus-team/lumus-sql-builder/commit/41b6ef6105c4dc9c83b69610ad1893d0269c488c))
 
 ### 🚜 Refactor
 
+- Refactor way of escaping values + refactoring all tests, just focusing in build SQL STATEMENTS - ([b0cb3b0](https://github.com/lumus-team/lumus-sql-builder/commit/b0cb3b03685f519422c0f45232f9a81326ed2a43))
 - Removing space in where predicate leaving for connectors (AND or OR) add space. - ([a99d1bb](https://github.com/lumus-team/lumus-sql-builder/commit/a99d1bb8f7b41607a4c44b48f674ec0d370d64ed))
 
 ### 📚 Documentation
 
+- Update CHANGELOG - ([52aa472](https://github.com/lumus-team/lumus-sql-builder/commit/52aa4720af305be1ee4e93220af137308bff677f))
 - Update README - ([9d0440e](https://github.com/lumus-team/lumus-sql-builder/commit/9d0440ec59b4e392ca345de37fa50db7b36a9da9))
 - Add libs documentation - ([643d7b2](https://github.com/lumus-team/lumus-sql-builder/commit/643d7b26decb976e13914d2fa7d5b447fcf6f49e))
 - Add lib documetation + README - ([dd204ab](https://github.com/lumus-team/lumus-sql-builder/commit/dd204ab219d99c4ad563bfb60c196e3a5d493fd0))
-- Update CHANGELOG and cargo.toml - ([a0899bc](https://github.com/lumus-team/lumus-sql-builder/commit/a0899bc07bdd86932c01aa31865cb9e0ceedb7b1))
-- Update CHANGELOG - ([92b9e95](https://github.com/lumus-team/lumus-sql-builder/commit/92b9e952ebfad5e88919157ca3ba36f6a8e97aa6))
 
 ### 🧪 Testing
 
-- Simplifying tests - ([381e90a](https://github.com/lumus-team/lumus-sql-builder/commit/381e90a28dcfc38adfe9e8fdc577b8f4213d1707))
+- Add tests for Join statements - ([562b247](https://github.com/lumus-team/lumus-sql-builder/commit/562b247a77406edd3aa51527057dddf8fa7be367))
 
 ### ⚙️ Miscellaneous Tasks
 
+- Separating code to better organization - ([d6c7d6a](https://github.com/lumus-team/lumus-sql-builder/commit/d6c7d6a23873c646e878d17114f2af9f9f57b3a6))
+- Update fn returns - ([5904e76](https://github.com/lumus-team/lumus-sql-builder/commit/5904e76b175f53c049d22e56d2e20a972cbe50e4))
 - Removing all mysql module focusing only in sqlite. - ([1f39b89](https://github.com/lumus-team/lumus-sql-builder/commit/1f39b8923924e8127a7061d9a3ea768444f88bf9))
 - Formatting project. - ([8c82bba](https://github.com/lumus-team/lumus-sql-builder/commit/8c82bba4c92f8408c8a1b20f683b1455b93754c3))
 
