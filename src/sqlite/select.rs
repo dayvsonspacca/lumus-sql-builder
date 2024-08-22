@@ -12,6 +12,7 @@ pub struct Select {
     order: Option<String>,
     limit: Option<u32>,
     offset: Option<u32>,
+    join: Option<Vec<String>>,
 }
 
 impl Select {
@@ -32,6 +33,7 @@ impl Select {
             order: None,
             limit: None,
             offset: None,
+            join: None,
         }
     }
 
@@ -146,6 +148,16 @@ impl Select {
         self
     }
 
+    /// Specifies a join.
+    pub fn join(&mut self, join: String) -> &mut Self {
+        match &mut self.join {
+            None => self.join = Some(vec![join]),
+            Some(j) => j.push(join),
+        }
+
+        self
+    }
+
     /// Builds and returns the SQL statement for the select query.
     pub fn build(&self) -> Result<String, SqlBuilderError> {
         if self.table.is_empty() {
@@ -165,6 +177,12 @@ impl Select {
         }
 
         statement.push_str(&format!(" FROM {}", self.table));
+
+        if let Some(join) = &self.join {
+            for j in join {
+                statement.push_str(&format!(" {}", j))
+            }
+        }
 
         if let Some(condition) = &self.condition {
             statement.push_str(&format!(" WHERE {}", condition));
