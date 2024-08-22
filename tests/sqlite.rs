@@ -1,4 +1,6 @@
-use lumus_sql_builder::sqlite::{Column, CreateTable, Delete, Insert, Select, Update, Where};
+use lumus_sql_builder::sqlite::{
+    Column, CreateTable, Delete, Insert, Join, JoinType, Select, Update, Where,
+};
 
 #[test]
 fn test_columns() {
@@ -212,6 +214,64 @@ fn test_select_queries() {
         select,
         "SELECT name, age FROM users WHERE age > 18 GROUP BY city ORDER BY name LIMIT 10 OFFSET 5;"
     );
+
+    let select = Select::new("users u")
+        .join(
+            Join::new("phones p", JoinType::Inner, "p.user_id = u.user_id")
+                .build()
+                .unwrap(),
+        )
+        .build()
+        .unwrap();
+
+    assert_eq!(
+        select,
+        "SELECT * FROM users u INNER JOIN phones p ON p.user_id = u.user_id;"
+    );
+
+    let select = Select::new("users u")
+        .join(
+            Join::new("addresses a", JoinType::Left, "a.user_id = u.user_id")
+                .build()
+                .unwrap(),
+        )
+        .build()
+        .unwrap();
+    assert_eq!(
+        select,
+        "SELECT * FROM users u LEFT JOIN addresses a ON a.user_id = u.user_id;"
+    );
+
+    let select = Select::new("users u")
+        .join(
+            Join::new("orders o", JoinType::Right, "o.user_id = u.user_id")
+                .build()
+                .unwrap(),
+        )
+        .build()
+        .unwrap();
+    assert_eq!(
+        select,
+        "SELECT * FROM users u RIGHT JOIN orders o ON o.user_id = u.user_id;"
+    );
+
+    let select = Select::new("users u")
+        .join(
+            Join::new("phones p", JoinType::Inner, "p.user_id = u.user_id")
+                .build()
+                .unwrap(),
+        )
+        .join(
+            Join::new("addresses a", JoinType::Left, "a.user_id = u.user_id")
+                .build()
+                .unwrap(),
+        )
+        .build()
+        .unwrap();
+    assert_eq!(
+                select,
+                "SELECT * FROM users u INNER JOIN phones p ON p.user_id = u.user_id LEFT JOIN addresses a ON a.user_id = u.user_id;"
+            );
 }
 
 #[test]
@@ -520,4 +580,44 @@ fn test_delete_clause() {
     let delete = Delete::new("users_tb").build().unwrap();
 
     assert_eq!(delete, "DELETE FROM users_tb;");
+}
+
+#[test]
+fn test_join_build() {
+    let join = Join::new("phones p", JoinType::Inner, "p.user_id = u.user_id")
+        .build()
+        .unwrap();
+    assert_eq!(join, "INNER JOIN phones p ON p.user_id = u.user_id");
+
+    let join = Join::new("addresses a", JoinType::Left, "a.user_id = u.user_id")
+        .build()
+        .unwrap();
+    assert_eq!(join, "LEFT JOIN addresses a ON a.user_id = u.user_id");
+
+    let join = Join::new("orders o", JoinType::Right, "o.user_id = u.user_id")
+        .build()
+        .unwrap();
+    assert_eq!(join, "RIGHT JOIN orders o ON o.user_id = u.user_id");
+
+    let join = Join::new("payments p", JoinType::RightOuter, "p.user_id = u.user_id")
+        .build()
+        .unwrap();
+    assert_eq!(join, "RIGHT OUTER JOIN payments p ON p.user_id = u.user_id");
+
+    let join = Join::new("invoices i", JoinType::LeftOuter, "i.user_id = u.user_id")
+        .build()
+        .unwrap();
+    assert_eq!(join, "LEFT OUTER JOIN invoices i ON i.user_id = u.user_id");
+
+    let join = Join::new(
+        "products pr",
+        JoinType::Full,
+        "pr.category_id = c.category_id",
+    )
+    .build()
+    .unwrap();
+    assert_eq!(
+        join,
+        "FULL JOIN products pr ON pr.category_id = c.category_id"
+    );
 }
