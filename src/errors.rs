@@ -1,5 +1,3 @@
-use core::fmt;
-
 #[derive(Debug)]
 pub enum SqlBuilderError {
     EmptyTableName,
@@ -12,8 +10,8 @@ pub enum SqlBuilderError {
     EmptyCondition,
 }
 
-impl fmt::Display for SqlBuilderError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl core::fmt::Display for SqlBuilderError {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
             SqlBuilderError::EmptyTableName => write!(f, "Table name cannot be empty."),
             SqlBuilderError::EmptyColumnName => write!(f, "Column name cannot be empty."),
